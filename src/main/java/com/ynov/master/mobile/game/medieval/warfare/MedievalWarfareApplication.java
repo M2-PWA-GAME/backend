@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MedievalWarfareApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MedievalWarfareApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MedievalWarfareApplication.class, args);
+    }
 
 }
