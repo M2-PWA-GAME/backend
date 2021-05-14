@@ -1,0 +1,6 @@
+management:
+  endpoint:
+    health:
+      show-details: always
+mongo:
+  connection-string: "mongodb+srv://king:6EQUJ5@medievalwarfare.nbkps.mongodb.net/game?w=majority"
