@@ -1,13 +1,12 @@
 package com.ynov.master.mobile.game.medieval.warfare.security;
 
+import com.ynov.master.mobile.game.medieval.warfare.model.User;
+import com.ynov.master.mobile.game.medieval.warfare.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import com.ynov.master.mobile.game.medieval.warfare.model.User;
-import com.ynov.master.mobile.game.medieval.warfare.repository.UserRepository;
 
 @Service
 public class CustomUserDetails implements UserDetailsService {
@@ -17,6 +16,7 @@ public class CustomUserDetails implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println(username);
         final User user = userRepository.findByUsername(username);
 
         if (user == null) {

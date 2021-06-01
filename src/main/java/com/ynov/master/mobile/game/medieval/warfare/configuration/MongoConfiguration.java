@@ -44,15 +44,9 @@ public class MongoConfiguration {
         return client.getDatabase("game");
     }
 
-    @Bean("helloCollection")
-    public MongoCollection<Document> openHelloCollection(MongoDatabase db) {
-        return db.getCollection("hello");
-    }
-
     @Bean
     public MongoCollection<User> openUsersCollection(MongoDatabase db) {
         return db.getCollection("users", User.class);
     }
-
 
 }

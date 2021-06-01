@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -44,17 +45,24 @@ public class UserService {
     }
 
     public String signup(User user) {
-        if (!userRepository.existsByUsername(user.getUsername())) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            if (user.getRoles().size() == 0) {
-                user.setRoles(List.of(Role.ROLE_CLIENT));
+        try {
+            if (!userRepository.existsByUsername(user.getUsername())) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                if (user.getRoles() == null ) {
+                    user.setRoles(List.of(Role.ROLE_CLIENT));
+                }
                 userRepository.save(user);
+                return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+            } else {
+                log.error("Username is already in use");
+                throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
             }
-            return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
-        } else {
-            log.error("Username is already in use");
-            throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            throw e;
         }
+
     }
 
     public boolean hasUserByUsername(String username) {
@@ -75,7 +83,9 @@ public class UserService {
     }
 
     public User whoami(HttpServletRequest req) {
-        return userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+        String username = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req));
+        log.debug("Retrieve information about: " + username);
+        return userRepository.findByUsername(username);
     }
 
     public String refresh(String username) {

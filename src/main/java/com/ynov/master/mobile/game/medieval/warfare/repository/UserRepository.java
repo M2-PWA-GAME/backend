@@ -3,17 +3,26 @@ package com.ynov.master.mobile.game.medieval.warfare.repository;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class UserRepository {
 
     @Autowired
     private MongoCollection<User> collection;
 
     public User findByUsername(String username) {
-        return collection.find(Filters.eq("username", username)).first();
+        log.debug("Looking for user: " + username);
+        User usr = collection.find(Filters.eq("username", username)).first();
+        if(usr != null) {
+            log.debug("Find user : " + usr.getId());
+        } else {
+            log.debug("No user found.");
+        }
+        return usr;
     }
 
     public boolean existsByUsername(String username) {

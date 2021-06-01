@@ -7,7 +7,7 @@ import lombok.Data;
 public class SigninDataDTO {
 
     @ApiModelProperty(position = 0)
-    private String email;
+    private String username;
 
     @ApiModelProperty(position = 1)
     private String password;

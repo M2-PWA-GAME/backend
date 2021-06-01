@@ -3,6 +3,7 @@ package com.ynov.master.mobile.game.medieval.warfare.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import com.ynov.master.mobile.game.medieval.warfare.dto.SigninDataDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +27,7 @@ import com.ynov.master.mobile.game.medieval.warfare.dto.UserResponseDTO;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
 import com.ynov.master.mobile.game.medieval.warfare.service.UserService;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 @Api(tags = "users")
@@ -42,8 +44,8 @@ public class UserController {
     @ApiResponses(value = {//
             @ApiResponse(code = 400, message = "Something went wrong"), //
             @ApiResponse(code = 422, message = "Invalid username/password supplied")})
-    public String login(@ApiParam("Signin User") SigninDataDTO login) {
-        return userService.signin(login.getEmail(), login.getPassword());
+    public String login(@ApiParam("Signin User") @RequestBody SigninDataDTO login) {
+        return userService.signin(login.getUsername(), login.getPassword());
     }
 
     @PostMapping("/signup")
@@ -53,6 +55,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "Access denied"), //
             @ApiResponse(code = 422, message = "Username is already in use")})
     public String signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
+        log.debug("Try signup with username: " + user.getUsername());
         return userService.signup(modelMapper.map(user, User.class));
     }
 
@@ -89,7 +92,13 @@ public class UserController {
             @ApiResponse(code = 403, message = "Access denied"), //
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public UserResponseDTO whoami(HttpServletRequest req) {
-        return modelMapper.map(userService.whoami(req), UserResponseDTO.class);
+        try {
+            return modelMapper.map(userService.whoami(req), UserResponseDTO.class);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @GetMapping("/refresh")
