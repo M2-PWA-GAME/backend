@@ -1,2 +1,6 @@
-package com.ynov.master.mobile.game.medieval.warfare.model;public class Tile {
+package com.ynov.master.mobile.game.medieval.warfare.model;
+
+public class Tile {
+
+  Position position;
 }
