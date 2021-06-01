@@ -44,12 +44,12 @@ public class SwaggerConfiguration {
     }
 
     private ApiInfo metadata() {
-        return new ApiInfoBuilder()//
-                .title("Medieval Warfare")//
-                .description("This is a school project about Progressive Web App with implementation of \"Battle Royal\" games")//
-                .version("1.0.0")//
-                .license("MIT License").licenseUrl("http://opensource.org/licenses/MIT")//
-                .contact(new Contact(null, null, "brice.michalski@ynov.com"))//
+        return new ApiInfoBuilder()
+                .title("Medieval Warfare")
+                .description("This is a school project about Progressive Web App with implementation of \"Battle Royal\" games")
+                .version("1.0.0")
+                .license("MIT License").licenseUrl("http://opensource.org/licenses/MIT")
+                .contact(new Contact(null, null, "brice.michalski@ynov.com"))
                 .build();
     }
 
