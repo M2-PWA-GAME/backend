@@ -2,8 +2,23 @@ management:
   endpoint:
     health:
       show-details: always
+
 mongo:
   connection-string: "mongodb+srv://king:6EQUJ5@medievalwarfare.nbkps.mongodb.net/game?w=majority"
 
-jwt:
-  secret: 6EUQJ5wow
+security:
+  jwt:
+    token:
+      secret-key: secret-key
+      expire-length: 300000 # 5 minutes duration by default: 5 minutes * 60 seconds * 1000 miliseconds
+
+logging:
+  level:
+    com.ynov.master.mobile.game.medieval.warfare: debug
+
+UserController:
+  signin: Authenticates user and returns its JWT token.
+  signup: Creates user and returns its JWT token
+  delete: Deletes specific user by username
+  search: Returns specific user by username
+  me: Returns current user's data
