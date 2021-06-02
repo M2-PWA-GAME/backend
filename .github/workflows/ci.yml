@@ -4,8 +4,8 @@ name: Continuous Integration
 on: [push]
 
 jobs:
-  lint:
-    name: Lint code base
+  build:
+    name: Assert project can build
     runs-on: ubuntu-latest
 
     steps:
@@ -19,4 +19,4 @@ jobs:
           distribution: 'adopt'
 
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots verify
+        run: mvn --batch-mode --update-snapshots install
