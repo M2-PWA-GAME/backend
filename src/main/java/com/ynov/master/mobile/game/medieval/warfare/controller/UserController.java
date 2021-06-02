@@ -2,6 +2,7 @@ package com.ynov.master.mobile.game.medieval.warfare.controller;
 
 import com.ynov.master.mobile.game.medieval.warfare.dto.SigninDataDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.UserDataDTO;
+import com.ynov.master.mobile.game.medieval.warfare.dto.UserGamesResponseDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.UserResponseDTO;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
 import com.ynov.master.mobile.game.medieval.warfare.service.UserService;
@@ -91,5 +92,13 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public String refresh(HttpServletRequest req) {
         return userService.refresh(req.getRemoteUser());
+    }
+
+
+    @GetMapping("/games")
+    @ApiOperation(value = "Return current users games", response = UserGamesResponseDTO.class, authorizations = {@Authorization(value = "apiKey")})
+    UserGamesResponseDTO getUserGames(HttpServletRequest request) {
+        User user = userService.whoami(request);
+        return modelMapper.map(user, UserGamesResponseDTO.class);
     }
 }

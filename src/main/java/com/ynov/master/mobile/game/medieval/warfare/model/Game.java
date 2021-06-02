@@ -15,9 +15,9 @@ public class Game {
   @BsonProperty("users")
   List<User> users;
 
-  @BsonProperty("_id")
+  @BsonProperty("turns")
   List<Turn> turns;
 
-  @BsonProperty("_id")
+  @BsonProperty("weapons")
   List<Weapon> weapons;
 }

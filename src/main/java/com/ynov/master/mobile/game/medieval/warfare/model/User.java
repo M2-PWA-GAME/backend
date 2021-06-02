@@ -1,4 +1,6 @@
 package com.ynov.master.mobile.game.medieval.warfare.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
@@ -22,5 +24,8 @@ public class User {
 
     @BsonProperty("roles")
     List<Role> roles;
+
+    @BsonProperty("games")
+    List<ObjectId> games;
 
 }
