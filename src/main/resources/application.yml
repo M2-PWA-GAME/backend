@@ -3,6 +3,9 @@ management:
     health:
       show-details: always
 
+server:
+  port: ${PORT}
+
 mongo:
   connection-string: "mongodb+srv://king:6EQUJ5@medievalwarfare.nbkps.mongodb.net/game?w=majority"
 
