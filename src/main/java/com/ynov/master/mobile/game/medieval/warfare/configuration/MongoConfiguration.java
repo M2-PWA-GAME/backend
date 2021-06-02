@@ -6,8 +6,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.ynov.master.mobile.game.medieval.warfare.model.Game;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
-import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
@@ -47,6 +47,11 @@ public class MongoConfiguration {
     @Bean
     public MongoCollection<User> openUsersCollection(MongoDatabase db) {
         return db.getCollection("users", User.class);
+    }
+
+    @Bean
+    public MongoCollection<Game> gameCollection(MongoDatabase db) {
+        return db.getCollection("games", Game.class);
     }
 
 }
