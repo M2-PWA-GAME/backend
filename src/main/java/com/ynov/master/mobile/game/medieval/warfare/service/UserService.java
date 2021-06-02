@@ -46,7 +46,7 @@ public class UserService {
     }
 
     public String signup(User user) {
-        try {
+
             if (!userRepository.existsByUsername(user.getUsername())) {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
                 if (user.getRoles() == null ) {
@@ -59,12 +59,6 @@ public class UserService {
                 log.error("Username is already in use");
                 throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
             }
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-            throw e;
-        }
-
     }
 
     public boolean hasUserByUsername(String username) {
