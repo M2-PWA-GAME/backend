@@ -45,9 +45,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         // Apply JWT
         http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
 
+        // Enable https
+        http.requiresChannel()
+                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+                .requiresSecure();
         // Optional, if you want to test the API from a browser
         // http.httpBasic();
     }
+
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -58,6 +63,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/configuration/**")//
                 .antMatchers("/webjars/**")//
                 .antMatchers("/public")
+                .antMatchers("/")
 
                 // Un-secure H2 Database (for testing purposes, H2 console shouldn't be unprotected in production)
                 .and()
