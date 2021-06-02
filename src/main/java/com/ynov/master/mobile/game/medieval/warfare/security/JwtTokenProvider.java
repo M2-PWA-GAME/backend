@@ -2,7 +2,6 @@ package com.ynov.master.mobile.game.medieval.warfare.security;
 
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +22,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
-import com.ynov.master.mobile.game.medieval.warfare.model.Role;
+
 
 @Component
 public class JwtTokenProvider {
