@@ -26,7 +26,7 @@ public class GameController {
     @ApiOperation(value = "Join a new game")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"),
-            @ApiResponse(code = 422, message = "Invalid username/password supplied")})
+    })
     public String joinGame(@ApiParam("Game code") @RequestBody String code) throws Exception {
         return gameService.join(code);
     }
@@ -36,7 +36,7 @@ public class GameController {
     @ApiOperation(value = "Play your turn")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"),
-            @ApiResponse(code = 422, message = "Invalid username/password supplied")})
+    })
     public String executeAction(@ApiParam("Game ID") @RequestBody ObjectId gameId,
                                 @ApiParam("Action to execute") @RequestBody ActionDTO action) throws Exception {
         //TODO
