@@ -6,11 +6,18 @@ import org.bson.types.ObjectId;
 
 @Data
 public class PlayerState {
-  @BsonProperty("_id")
-  private ObjectId id;
+    @BsonProperty("_id")
+    private ObjectId id;
 
-  Position position;
-  Integer health;
-  Integer armor;
-  Weapon weapon;
+    @BsonProperty("position")
+    Position position;
+
+    @BsonProperty("health")
+    Integer health;
+
+    @BsonProperty("armor")
+    Integer armor;
+
+    @BsonProperty("weapon")
+    Weapon weapon;
 }
