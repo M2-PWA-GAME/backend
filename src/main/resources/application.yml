@@ -4,7 +4,7 @@ management:
       show-details: always
 
 server:
-  port: ${PORT}
+  port: ${PORT:8080}
 
 mongo:
   connection-string: "mongodb+srv://king:6EQUJ5@medievalwarfare.nbkps.mongodb.net/game?w=majority"

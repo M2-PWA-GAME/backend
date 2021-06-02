@@ -1,1 +1,1 @@
-web: java -jar target/*.jar --spring.config.location="src/main/resources/application.yml" -Dserver.port=$PORT
+web: java -jar target/*.jar --spring.config.location="src/main/resources/application.yml"
