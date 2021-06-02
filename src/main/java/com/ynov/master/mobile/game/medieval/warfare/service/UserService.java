@@ -6,6 +6,7 @@ import com.ynov.master.mobile.game.medieval.warfare.model.User;
 import com.ynov.master.mobile.game.medieval.warfare.repository.UserRepository;
 import com.ynov.master.mobile.game.medieval.warfare.security.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -48,7 +48,7 @@ public class UserService {
         try {
             if (!userRepository.existsByUsername(user.getUsername())) {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
-                if (user.getRoles() == null ) {
+                if (user.getRoles() == null) {
                     user.setRoles(List.of(Role.ROLE_CLIENT));
                 }
                 userRepository.save(user);
@@ -57,8 +57,7 @@ public class UserService {
                 log.error("Username is already in use");
                 throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
             }
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
