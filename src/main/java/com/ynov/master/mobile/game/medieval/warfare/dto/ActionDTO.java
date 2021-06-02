@@ -3,18 +3,18 @@ package com.ynov.master.mobile.game.medieval.warfare.dto;
 
 import com.ynov.master.mobile.game.medieval.warfare.model.ActionType;
 import com.ynov.master.mobile.game.medieval.warfare.model.Position;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 
 @Data
 public class ActionDTO {
 
-    @BsonProperty("action_type")
+    @ApiModelProperty(position = 0)
     ActionType actionType;
 
-    @BsonProperty("from")
+    @ApiModelProperty(position = 1)
     Position from;
 
-    @BsonProperty("to")
+    @ApiModelProperty(position = 2)
     Position to;
 }
