@@ -50,19 +50,15 @@ public class GameController {
             HttpServletRequest request,
             @ApiParam("Game creation datas") @RequestBody CreateGameDataDTO gameData
     ) throws Exception {
-        try {
-            User user = userService.whoami(request);
-            Game newGame = gameService.createNewGame(gameData.getName(), gameData.getMaxPlayers());
-            gameService.userJoinGame(newGame, user);
-            return new CreateGameResponseDTO(
-                    newGame.getId().toString(),
-                    newGame.getName(),
-                    request.getRequestURL().toString() + "join/" + newGame.getId().toString()
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+
+        User user = userService.whoami(request);
+        Game newGame = gameService.createNewGame(gameData.getName(), gameData.getMaxPlayers());
+        gameService.userJoinGame(newGame, user);
+        return new CreateGameResponseDTO(
+                newGame.getId().toString(),
+                newGame.getName(),
+                request.getRequestURL().toString() + "join/" + newGame.getId().toString()
+        );
     }
 
 
