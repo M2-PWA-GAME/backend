@@ -2,12 +2,12 @@ package com.ynov.master.mobile.game.medieval.warfare.security;
 
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import com.ynov.master.mobile.game.medieval.warfare.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
-import com.ynov.master.mobile.game.medieval.warfare.model.Role;
+
 
 @Component
 public class JwtTokenProvider {
@@ -41,10 +41,11 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String username, List<Role> roles) {
+    public String createToken(User user) {
 
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).collect(Collectors.toList()));
+        Claims claims = Jwts.claims().setSubject(user.getUsername());
+        claims.put("auth", user.getRoles().stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).collect(Collectors.toList()));
+        claims.put("user_id",user.getId().toString());
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
