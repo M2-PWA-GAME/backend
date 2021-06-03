@@ -41,7 +41,7 @@ public class GameController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/")
+    @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "Create a new game")
     @ApiResponses(
             value = {@ApiResponse(code = 400, message = "Something went wrong")}
@@ -56,7 +56,7 @@ public class GameController {
         return new CreateGameResponseDTO(
                 newGame.getId().toString(),
                 newGame.getName(),
-                request.getRequestURL().toString() + "join/" + newGame.getId().toString()
+                request.getRequestURL().toString() + "/join/" + newGame.getId().toString()
         );
     }
 

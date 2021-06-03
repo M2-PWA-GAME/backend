@@ -34,8 +34,6 @@ public class MongoConfiguration {
                 .retryWrites(true)
                 .build();
 
-        System.out.println("OK");
-
         return MongoClients.create(settings);
     }
 
