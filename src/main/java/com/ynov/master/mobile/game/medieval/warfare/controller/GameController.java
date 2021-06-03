@@ -3,6 +3,7 @@ package com.ynov.master.mobile.game.medieval.warfare.controller;
 import com.ynov.master.mobile.game.medieval.warfare.dto.ActionDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.CreateGameDataDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.CreateGameResponseDTO;
+import com.ynov.master.mobile.game.medieval.warfare.dto.GameActiveResponseDTO;
 import com.ynov.master.mobile.game.medieval.warfare.model.Game;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
 import com.ynov.master.mobile.game.medieval.warfare.service.GameService;
@@ -79,13 +80,15 @@ public class GameController {
     }
 
 
-    @GetMapping("/active/${gameId}")
+    @GetMapping("/active/{code}")
     @ApiOperation(value = "Check if the game is enable to join")
     @ApiResponses(
             value = {@ApiResponse(code = 400, message = "Something went wrong")}
     )
-    public Object isGameActive(@ApiParam("Game code") @PathVariable("code") String code) {
-        return null;
+    public GameActiveResponseDTO isGameActive(@ApiParam("Game code") @PathVariable("code") String code)
+            throws Exception {
+        Game game = gameService.getGame(code);
+        return new GameActiveResponseDTO(game.getId().toString(), game.getStatus());
     }
 
 }
