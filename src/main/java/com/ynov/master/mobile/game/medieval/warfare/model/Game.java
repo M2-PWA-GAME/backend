@@ -9,15 +9,32 @@ import java.util.List;
 @Data
 public class Game {
 
-  @BsonProperty("_id")
-  private ObjectId id;
+    @BsonProperty("_id")
+    private ObjectId id;
 
-  @BsonProperty("users")
-  List<User> users;
+    @BsonProperty("status")
+    GameStatus status;
 
-  @BsonProperty("_id")
-  List<Turn> turns;
+    @BsonProperty("name")
+    String name;
 
-  @BsonProperty("_id")
-  List<Weapon> weapons;
+    @BsonProperty("maxPlayers")
+    Integer maxPlayers;
+
+    @BsonProperty("users")
+    List<String> users;
+
+    @BsonProperty("turns")
+    List<Turn> turns;
+
+    @BsonProperty("weapons")
+    List<Weapon> weapons;
+
+
+    public Game addUser(User user) {
+        this.users.add(user.getId().toString());
+        return this;
+    }
+
+
 }

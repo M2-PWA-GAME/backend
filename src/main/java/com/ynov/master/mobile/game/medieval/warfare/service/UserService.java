@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -49,7 +48,7 @@ public class UserService {
 
             if (!userRepository.existsByUsername(user.getUsername())) {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
-                if (user.getRoles() == null ) {
+                if (user.getRoles() == null) {
                     user.setRoles(List.of(Role.ROLE_CLIENT));
                 }
                 userRepository.save(user);
