@@ -11,7 +11,6 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 
@@ -29,7 +28,7 @@ public class GameService {
     public void joinGameWithCode(String joinCode, User user) throws Exception {
         Game game = gameRepository.findGameById(joinCode);
         if (game.getUsers().contains(user.getId().toString())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You cannot join the game");
+            throw new CustomException("You already joined the game", HttpStatus.UNAUTHORIZED);
         }
         this.userJoinGame(game, user);
     }
@@ -40,7 +39,7 @@ public class GameService {
 
     public void userJoinGame(Game game, User user) throws Exception {
 
-        if(game.getMaxPlayers() <= game.getUsers().size()) {
+        if (game.getMaxPlayers() <= game.getUsers().size()) {
             throw new CustomException("Game has max players in it", HttpStatus.GONE);
         }
 

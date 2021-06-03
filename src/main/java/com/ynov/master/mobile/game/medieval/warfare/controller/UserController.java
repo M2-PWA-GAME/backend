@@ -49,7 +49,7 @@ public class UserController {
 
     @DeleteMapping(value = "/{username}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @ApiOperation(value = "${UserController.delete}", authorizations = {@Authorization(value = "apiKey")})
+    @ApiOperation(value = "${UserController.delete}")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"),
             @ApiResponse(code = 403, message = "Access denied"),
@@ -62,7 +62,7 @@ public class UserController {
 
     @GetMapping(value = "/{username}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @ApiOperation(value = "${UserController.search}", response = UserResponseDTO.class, authorizations = {@Authorization(value = "apiKey")})
+    @ApiOperation(value = "${UserController.search}", response = UserResponseDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"),
             @ApiResponse(code = 403, message = "Access denied"),
@@ -74,7 +74,7 @@ public class UserController {
 
     @GetMapping(value = "/me")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
-    @ApiOperation(value = "${UserController.me}", response = UserResponseDTO.class, authorizations = {@Authorization(value = "apiKey")})
+    @ApiOperation(value = "${UserController.me}", response = UserResponseDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"),
             @ApiResponse(code = 403, message = "Access denied"),
@@ -96,7 +96,7 @@ public class UserController {
 
 
     @GetMapping("/games")
-    @ApiOperation(value = "Return current users games", response = UserGamesResponseDTO.class, authorizations = {@Authorization(value = "apiKey")})
+    @ApiOperation(value = "Return current users games", response = UserGamesResponseDTO.class)
     UserGamesResponseDTO getUserGames(HttpServletRequest request) {
         User user = userService.whoami(request);
         return modelMapper.map(user, UserGamesResponseDTO.class);

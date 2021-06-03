@@ -1,6 +1,5 @@
 package com.ynov.master.mobile.game.medieval.warfare.controller;
 
-import com.ynov.master.mobile.game.medieval.warfare.dto.ActionDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.CreateGameDataDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.CreateGameResponseDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.GameActiveResponseDTO;
@@ -11,7 +10,6 @@ import com.ynov.master.mobile.game.medieval.warfare.service.GameService;
 import com.ynov.master.mobile.game.medieval.warfare.service.UserService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
