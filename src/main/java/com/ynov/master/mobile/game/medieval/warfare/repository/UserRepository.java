@@ -39,11 +39,12 @@ public class UserRepository {
         collection.deleteOne(Filters.eq("username", username));
     }
 
-    public User update(User user) throws Exception {
+    public void update(User user) throws RuntimeException {
+
         if (user.getId() == null) {
-            throw new Exception("Cannot update a user without an _id");
+            throw new RuntimeException("Cannot update a user without an _id");
         }
-        FindOneAndReplaceOptions returnDocAfterReplace = new FindOneAndReplaceOptions().returnDocument(ReturnDocument.AFTER);
-        return collection.findOneAndReplace(Filters.eq("_id", user.getId()), user, returnDocAfterReplace);
+
+        collection.findOneAndReplace(Filters.eq("_id", user.getId()), user);
     }
 }
