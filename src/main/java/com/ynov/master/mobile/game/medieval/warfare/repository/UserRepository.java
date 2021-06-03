@@ -2,6 +2,8 @@ package com.ynov.master.mobile.game.medieval.warfare.repository;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.FindOneAndReplaceOptions;
+import com.mongodb.client.model.ReturnDocument;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ public class UserRepository {
     public User findByUsername(String username) {
         log.debug("Looking for user: " + username);
         User usr = collection.find(Filters.eq("username", username)).first();
-        if(usr != null) {
+        if (usr != null) {
             log.debug("Find user : " + usr.getId());
         } else {
             log.debug("No user found.");
@@ -35,5 +37,13 @@ public class UserRepository {
 
     public void deleteByUsername(String username) {
         collection.deleteOne(Filters.eq("username", username));
+    }
+
+    public User update(User user) throws Exception {
+        if (user.getId() == null) {
+            throw new Exception("Cannot update a user without an _id");
+        }
+        FindOneAndReplaceOptions returnDocAfterReplace = new FindOneAndReplaceOptions().returnDocument(ReturnDocument.AFTER);
+        return collection.findOneAndReplace(Filters.eq("_id", user.getId()), user, returnDocAfterReplace);
     }
 }
