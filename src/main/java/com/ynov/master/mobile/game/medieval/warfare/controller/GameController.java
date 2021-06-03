@@ -52,8 +52,7 @@ public class GameController {
     ) throws Exception {
 
         User user = userService.whoami(request);
-        Game newGame = gameService.createNewGame(gameData.getName(), gameData.getMaxPlayers());
-        gameService.userJoinGame(newGame, user);
+        Game newGame = gameService.createNewGame(gameData.getName(), gameData.getMaxPlayers(), user);
         return new CreateGameResponseDTO(
                 newGame.getId().toString(),
                 newGame.getName(),

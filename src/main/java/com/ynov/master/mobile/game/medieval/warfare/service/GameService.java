@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -50,12 +51,18 @@ public class GameService {
     }
 
 
-    public Game createNewGame(String name, Integer maxPlayers) {
+    public Game createNewGame(String name, Integer maxPlayers, User user) {
+
+        if(maxPlayers < 2) {
+            throw new CustomException("Max player must be greater or equals to 2", HttpStatus.BAD_REQUEST);
+        }
         Game game = new Game();
         game.setId(new ObjectId());
         game.setName(name);
         game.setMaxPlayers(maxPlayers);
-        game.setUsers(new ArrayList<>());
+        List<String> users = new ArrayList<>();
+        users.add(user.getId().toString());
+        game.setUsers(users);
         game.setStatus(GameStatus.WAITING);
         gameRepository.save(game);
         return game;
