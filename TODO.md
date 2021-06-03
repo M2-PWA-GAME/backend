@@ -17,6 +17,7 @@ res
 ## POST /games => creer une partie
 UserId => token
 req
+
 ```json
 {
   "name": "Alban vs Kunfu",
@@ -27,7 +28,8 @@ req
 res
 ```json
 {
-  "id": "Alban vs Kunfu",
+  "id": "GAMEID",
+  "name": "Alban vs Kunfu",
   "join_url": "https://....../games/join/${gameid}"
 }
 ```

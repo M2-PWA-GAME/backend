@@ -7,5 +7,9 @@ import java.util.List;
 @Data
 public class Map {
 
+  private int xMax;
+
+  private int yMax;
+
   List<Tile> tiles;
 }
