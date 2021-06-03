@@ -7,6 +7,7 @@ import com.mongodb.client.model.InsertOneOptions;
 import com.mongodb.client.model.ReturnDocument;
 import com.ynov.master.mobile.game.medieval.warfare.model.Game;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -21,9 +22,7 @@ public class GameRepository {
 
 
     public Game findGameById(String gameId) throws Exception {
-        Game game = collection.find(Filters.eq("_id", gameId)).first();
-        if (game != null) return game;
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
+        return collection.find(Filters.eq("_id", new ObjectId(gameId))).first();
     }
 
 

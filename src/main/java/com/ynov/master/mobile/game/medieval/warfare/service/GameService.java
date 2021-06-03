@@ -1,5 +1,6 @@
 package com.ynov.master.mobile.game.medieval.warfare.service;
 
+import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
 import com.ynov.master.mobile.game.medieval.warfare.model.Game;
 import com.ynov.master.mobile.game.medieval.warfare.model.GameStatus;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
@@ -38,6 +39,11 @@ public class GameService {
     }
 
     public void userJoinGame(Game game, User user) throws Exception {
+
+        if(game.getMaxPlayers() <= game.getUsers().size()) {
+            throw new CustomException("Game has max players in it", HttpStatus.GONE);
+        }
+
         game.addUser(user);
         gameRepository.update(game);
         user.addGame(game);

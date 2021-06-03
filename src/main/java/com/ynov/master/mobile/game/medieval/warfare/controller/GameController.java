@@ -4,6 +4,7 @@ import com.ynov.master.mobile.game.medieval.warfare.dto.ActionDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.CreateGameDataDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.CreateGameResponseDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.GameActiveResponseDTO;
+import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
 import com.ynov.master.mobile.game.medieval.warfare.model.Game;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
 import com.ynov.master.mobile.game.medieval.warfare.service.GameService;
@@ -42,19 +43,6 @@ public class GameController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/{gameId}/play")
-    @ApiOperation(value = "Play your turn")
-    @ApiResponses(
-            value = {@ApiResponse(code = 400, message = "Something went wrong")}
-    )
-    public String executeAction(
-            @ApiParam("Game ID") @RequestBody ObjectId gameId,
-            @ApiParam("Action to execute") @RequestBody ActionDTO action
-    ) throws Exception {
-        //TODO
-        throw new Exception("Not implemented");
-    }
-
     @PostMapping("/")
     @ApiOperation(value = "Create a new game")
     @ApiResponses(
@@ -88,6 +76,8 @@ public class GameController {
     public GameActiveResponseDTO isGameActive(@ApiParam("Game code") @PathVariable("code") String code)
             throws Exception {
         Game game = gameService.getGame(code);
+        if (game == null)
+            throw new CustomException("Game not found", HttpStatus.NOT_FOUND);
         return new GameActiveResponseDTO(game.getId().toString(), game.getStatus());
     }
 
