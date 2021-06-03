@@ -1,18 +1,20 @@
 package com.ynov.master.mobile.game.medieval.warfare.exception;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.ynov.master.mobile.game.medieval.warfare.dto.CustomExceptionResponseDTO;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandlerController {
@@ -31,8 +33,8 @@ public class GlobalExceptionHandlerController {
     }
 
     @ExceptionHandler(CustomException.class)
-    public void handleCustomException(HttpServletResponse res, CustomException ex) throws IOException {
-        res.sendError(ex.getHttpStatus().value(), ex.getMessage());
+    public ResponseEntity<CustomExceptionResponseDTO> handleCustomException(HttpServletRequest req, CustomException ex) throws IOException {
+        return ResponseEntity.status(ex.getHttpStatus()).body(new CustomExceptionResponseDTO(ex, req));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
