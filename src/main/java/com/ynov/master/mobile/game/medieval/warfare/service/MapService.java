@@ -57,21 +57,22 @@ public class MapService {
                 }
                 tiles.add(nTile);
 
-//                if(nTile.getType().equals(TileType.WATER)) {
-//                    System.out.print(ANSI_BLUE + "■  " +ANSI_RESET );
-//                }
-//                if(nTile.getType().equals(TileType.GRASS)) {
-//                    System.out.print(ANSI_GREEN + "■  " +ANSI_RESET );
-//                }
-//                if(nTile.getType().equals(TileType.ROCK)) {
-//                    System.out.print(ANSI_RED + "■  " +ANSI_RESET );
-//                }
-//
-//
-//                if(x == xMax - 1)
-//                {
-//                    System.out.println();
-//                }
+
+                switch (nTile.getType()) {
+                    case ROCK:
+                        System.out.print(ANSI_RED + "■  " +ANSI_RESET );
+                        break;
+                    case GRASS:
+                        System.out.print(ANSI_GREEN + "■  " +ANSI_RESET );
+                        break;
+                    case WATER:
+                        System.out.print(ANSI_BLUE + "■  " +ANSI_RESET );
+                        break;
+                }
+
+                if(x == xMax - 1) {
+                    System.out.println();
+                }
 
             }
         }

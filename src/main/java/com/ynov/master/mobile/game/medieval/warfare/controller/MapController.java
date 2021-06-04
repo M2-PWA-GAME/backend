@@ -22,7 +22,7 @@ public class MapController {
 
     @PostMapping("/random")
     public ResponseEntity<Map> generateRandomMap(@RequestBody RandomMapDataDTO input) {
-        if (input.getXMax() * input.getYMax() > 10000) {
+        if (isNotInRange(input.getXMax(), input.getYMax())) {
             throw new CustomException("Max map size : 100 x 100", HttpStatus.BAD_REQUEST);
         }
         Map map = mapService.generateRandomMap(input.getXMax(), input.getYMax());
@@ -31,7 +31,7 @@ public class MapController {
 
     @PostMapping("/seed")
     public ResponseEntity<Map> generateRandomMap(@RequestBody SeedMapDataDTO input) {
-        if (input.getXMax() * input.getYMax() > 10000) {
+        if (isNotInRange(input.getXMax(), input.getYMax())) {
             throw new CustomException("Max map size : 100 x 100", HttpStatus.BAD_REQUEST);
         }
         if ((input.getSeed() > 30000) || (input.getSeed() < 9000)) {
@@ -39,6 +39,11 @@ public class MapController {
         }
         Map map = mapService.generateMapFromSeed(input.getXMax(), input.getYMax(), input.getSeed());
         return ResponseEntity.status(HttpStatus.CREATED).body(map);
+    }
+
+    private boolean isNotInRange(int x, int y) {
+        final int max = 100;
+        return x < 0 || x > max || y < 0 || y > max;
     }
 
 }
