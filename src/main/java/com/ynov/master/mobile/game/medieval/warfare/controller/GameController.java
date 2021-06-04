@@ -67,7 +67,7 @@ public class GameController {
                 request.getRequestURL().toString() + "/join/" + newGame.getId().toString()
         );
     }
-    git
+
     @GetMapping("/active/{code}")
     @ApiOperation(value = "Check if the game is enable to join")
     @ApiResponses(

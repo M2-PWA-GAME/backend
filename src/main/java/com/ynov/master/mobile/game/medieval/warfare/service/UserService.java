@@ -36,7 +36,7 @@ public class UserService {
     public String signin(String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            User user =  userRepository.findByUsername(username);
+            User user = userRepository.findByUsername(username);
             return jwtTokenProvider.createToken(user);
         } catch (AuthenticationException e) {
             log.error("Invalid username/password supplied");
@@ -46,18 +46,18 @@ public class UserService {
 
     public String signup(User user) {
 
-            if (!userRepository.existsByUsername(user.getUsername())) {
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
-                if (user.getRoles() == null) {
-                    user.setRoles(List.of(Role.ROLE_CLIENT));
-                }
-                userRepository.save(user);
-                User createdUser = userRepository.findByUsername(user.getUsername());
-                return jwtTokenProvider.createToken(createdUser);
-            } else {
-                log.error("Username is already in use");
-                throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
+        if (!userRepository.existsByUsername(user.getUsername())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            if (user.getRoles() == null) {
+                user.setRoles(List.of(Role.ROLE_CLIENT));
             }
+            userRepository.save(user);
+            User createdUser = userRepository.findByUsername(user.getUsername());
+            return jwtTokenProvider.createToken(createdUser);
+        } else {
+            log.error("Username is already in use");
+            throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
 
     public boolean hasUserByUsername(String username) {

@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -21,16 +20,15 @@ public class MapService {
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_BLUE = "\u001B[34m";
 
-    public static final  double WATER_LIMIT = -200; // WATER IF NOISE < WATER_LIMIT
-    public static final  double GRASS_LIMIT = 200; // GRAAS IF  WATER_LIMIT < NOISE < GRASS_LIMIT
+    public static final double WATER_LIMIT = -200; // WATER IF NOISE < WATER_LIMIT
+    public static final double GRASS_LIMIT = 200; // GRAAS IF  WATER_LIMIT < NOISE < GRASS_LIMIT
 
-    public Map generateMap(int xMax, int yMax, int seed)
-    {
+    public Map generateMap(int xMax, int yMax, int seed) {
         if (isNotInRange(xMax, yMax)) {
             throw new CustomException("Max map size : 100 x 100", HttpStatus.BAD_REQUEST);
         }
 
-        if (seed > 30000 || seed < 9000 ) {
+        if (seed > 30000 || seed < 9000) {
             throw new CustomException("Map seed need to be between 9000 and 30000", HttpStatus.BAD_REQUEST);
         }
 
@@ -53,15 +51,13 @@ public class MapService {
             for (int x = 0; x < xMax; x++) {
 
                 Tile nTile = new Tile(x, y);
-                double noise = noiseHandler.getNoise(x,y);
+                double noise = noiseHandler.getNoise(x, y);
 
-                if(noise < WATER_LIMIT) {
+                if (noise < WATER_LIMIT) {
                     nTile.setType(TileType.WATER);
-                }
-                else if(noise > WATER_LIMIT  && noise < GRASS_LIMIT) {
+                } else if (noise > WATER_LIMIT && noise < GRASS_LIMIT) {
                     nTile.setType(TileType.GRASS);
-                }
-                else {
+                } else {
                     nTile.setType(TileType.ROCK);
                 }
                 tiles.add(nTile);
@@ -69,17 +65,17 @@ public class MapService {
 
                 switch (nTile.getType()) {
                     case ROCK:
-                        System.out.print(ANSI_RED + "■  " +ANSI_RESET );
+                        System.out.print(ANSI_RED + "■  " + ANSI_RESET);
                         break;
                     case GRASS:
-                        System.out.print(ANSI_GREEN + "■  " +ANSI_RESET );
+                        System.out.print(ANSI_GREEN + "■  " + ANSI_RESET);
                         break;
                     case WATER:
-                        System.out.print(ANSI_BLUE + "■  " +ANSI_RESET );
+                        System.out.print(ANSI_BLUE + "■  " + ANSI_RESET);
                         break;
                 }
 
-                if(x == xMax - 1) {
+                if (x == xMax - 1) {
                     System.out.println();
                 }
 
@@ -93,11 +89,11 @@ public class MapService {
 
     public Map generateRandomMap(int xMax, int yMax) {
         int seed = (int) ((Math.random() * (30000 - 9000)) + 9000);
-        return generateMap(xMax,yMax,seed);
+        return generateMap(xMax, yMax, seed);
     }
 
     public Map generateMapFromSeed(int xMax, int yMax, int seed) {
-        return generateMap(xMax,yMax,seed);
+        return generateMap(xMax, yMax, seed);
     }
 
     public boolean isNotInRange(int x, int y) {

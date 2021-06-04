@@ -2,7 +2,6 @@ package com.ynov.master.mobile.game.medieval.warfare.controller;
 
 import com.ynov.master.mobile.game.medieval.warfare.dto.RandomMapDataDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.SeedMapDataDTO;
-import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
 import com.ynov.master.mobile.game.medieval.warfare.model.Map;
 import com.ynov.master.mobile.game.medieval.warfare.service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;

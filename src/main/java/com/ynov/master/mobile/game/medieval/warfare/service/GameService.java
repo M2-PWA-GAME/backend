@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -50,8 +48,7 @@ public class GameService {
         user.addGame(game);
         userRepository.update(user);
 
-        if(game.getUsers().size() == game.getMaxPlayers())
-        {
+        if (game.getUsers().size() == game.getMaxPlayers()) {
             game.setStatus(GameStatus.PLAYING);
         }
 
@@ -61,7 +58,7 @@ public class GameService {
 
     public Game createNewGame(String name, Integer maxPlayers, User user, Map map) throws Exception {
 
-        if(maxPlayers < 2) {
+        if (maxPlayers < 2) {
             throw new CustomException("Max player must be greater or equals to 2", HttpStatus.BAD_REQUEST);
         }
 
