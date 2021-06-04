@@ -19,7 +19,7 @@ public class GameRepository {
     private MongoCollection<Game> collection;
 
 
-    public Game findGameById(String gameId) throws Exception {
+    public Game findGameById(String gameId) {
         return collection.find(Filters.eq("_id", new ObjectId(gameId))).first();
     }
 

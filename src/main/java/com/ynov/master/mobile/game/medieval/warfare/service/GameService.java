@@ -35,7 +35,7 @@ public class GameService {
         this.userJoinGame(game, user);
     }
 
-    public Game getGame(String gameId) throws Exception {
+    public Game getGame(String gameId) {
         return gameRepository.findGameById(gameId);
     }
 

@@ -4,15 +4,14 @@ import com.ynov.master.mobile.game.medieval.warfare.model.GameStatus;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class UserGamesResponseDTO {
-
+public class UserGamesPreviewResponseDTO {
     @ApiModelProperty()
     String id;
 
     @ApiModelProperty(position = 1)
-    List<UserGamesPreviewResponseDTO> games;
-}
+    String name;
 
+    @ApiModelProperty(position = 2)
+    GameStatus status;
+}
