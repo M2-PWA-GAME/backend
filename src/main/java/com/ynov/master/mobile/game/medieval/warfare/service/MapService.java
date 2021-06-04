@@ -1,9 +1,11 @@
 package com.ynov.master.mobile.game.medieval.warfare.service;
 
+import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
 import com.ynov.master.mobile.game.medieval.warfare.model.Map;
 import com.ynov.master.mobile.game.medieval.warfare.model.Tile;
 import com.ynov.master.mobile.game.medieval.warfare.model.TileType;
 import com.ynov.master.mobile.game.medieval.warfare.util.PerlinNoise;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +26,13 @@ public class MapService {
 
     public Map generateMap(int xMax, int yMax, int seed)
     {
+        if (isNotInRange(xMax, yMax)) {
+            throw new CustomException("Max map size : 100 x 100", HttpStatus.BAD_REQUEST);
+        }
+
+        if (seed > 30000 || seed < 9000 ) {
+            throw new CustomException("Map seed need to be between 9000 and 30000", HttpStatus.BAD_REQUEST);
+        }
 
         PerlinNoise noiseHandler = new PerlinNoise();
         noiseHandler.setFrequency(0.3);
@@ -32,10 +41,10 @@ public class MapService {
         noiseHandler.setPersistence(0.3);
         noiseHandler.setSeed(seed);
 
-
         Map map = new Map();
         map.setXMax(xMax);
         map.setYMax(yMax);
+        map.setSeed(seed);
 
         System.out.println("===== MAP =====");
 
@@ -90,4 +99,11 @@ public class MapService {
     public Map generateMapFromSeed(int xMax, int yMax, int seed) {
         return generateMap(xMax,yMax,seed);
     }
+
+    public boolean isNotInRange(int x, int y) {
+        final int max = 100;
+        return x < 0 || x > max || y < 0 || y > max;
+    }
+
+
 }

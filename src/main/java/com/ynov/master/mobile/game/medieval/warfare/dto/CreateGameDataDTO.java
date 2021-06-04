@@ -12,4 +12,13 @@ public class CreateGameDataDTO {
     @ApiModelProperty(position = 1)
     private Integer maxPlayers;
 
+    @ApiModelProperty(position = 1)
+    private Integer xMax;
+
+    @ApiModelProperty(position = 1)
+    private Integer yMax;
+
+    @ApiModelProperty(position = 1)
+    private Integer seed;
+
 }
