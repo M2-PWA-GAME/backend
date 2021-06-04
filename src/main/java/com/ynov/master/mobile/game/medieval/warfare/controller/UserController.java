@@ -98,12 +98,11 @@ public class UserController {
         return userService.refresh(req.getRemoteUser());
     }
 
-
     @GetMapping("/games")
     @ApiOperation(value = "Return current users games", response = UserGamesResponseDTO.class)
     UserGamesResponseDTO getUserGames(HttpServletRequest request) {
         User user = userService.whoami(request);
-        
+
         UserGamesResponseDTO responseDTO = new UserGamesResponseDTO();
         responseDTO.setId(user.getId().toString());
 
@@ -111,6 +110,7 @@ public class UserController {
             Game game = gameService.getGame(gameId.toString());
             return modelMapper.map(game, UserGamesPreviewResponseDTO.class);
         }).collect(Collectors.toList());
+
         responseDTO.setGames(previewGames);
 
         return responseDTO;

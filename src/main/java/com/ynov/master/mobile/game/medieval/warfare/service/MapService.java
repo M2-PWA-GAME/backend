@@ -44,8 +44,6 @@ public class MapService {
         map.setYMax(yMax);
         map.setSeed(seed);
 
-        System.out.println("===== MAP =====");
-
         List<Tile> tiles = new ArrayList<>();
         for (int y = 0; y < yMax; y++) {
             for (int x = 0; x < xMax; x++) {

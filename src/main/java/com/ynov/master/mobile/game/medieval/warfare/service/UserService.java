@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -51,6 +53,7 @@ public class UserService {
             if (user.getRoles() == null) {
                 user.setRoles(List.of(Role.ROLE_CLIENT));
             }
+            user.setGames(Collections.emptyList());
             userRepository.save(user);
             User createdUser = userRepository.findByUsername(user.getUsername());
             return jwtTokenProvider.createToken(createdUser);

@@ -1,13 +1,15 @@
 package com.ynov.master.mobile.game.medieval.warfare.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class Tile {
 
-  final Position position;
+  Position position;
   TileType type;
   Boolean isNavigable;
 
@@ -20,5 +22,6 @@ public class Tile {
     this.isNavigable = !notNavigable.contains(type);
     this.type = type;
   }
+
 
 }
