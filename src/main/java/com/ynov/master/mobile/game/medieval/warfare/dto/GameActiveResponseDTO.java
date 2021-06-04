@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 public class GameActiveResponseDTO {
 
-
     @ApiModelProperty(position = 0)
     String gameId;
 
