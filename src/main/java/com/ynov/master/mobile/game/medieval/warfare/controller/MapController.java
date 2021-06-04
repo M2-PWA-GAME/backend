@@ -4,6 +4,7 @@ import com.ynov.master.mobile.game.medieval.warfare.dto.RandomMapDataDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.SeedMapDataDTO;
 import com.ynov.master.mobile.game.medieval.warfare.model.Map;
 import com.ynov.master.mobile.game.medieval.warfare.service.MapService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/maps")
+@Api(tags = "maps")
 public class MapController {
 
     @Autowired
