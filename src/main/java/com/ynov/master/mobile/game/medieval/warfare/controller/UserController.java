@@ -1,10 +1,9 @@
 package com.ynov.master.mobile.game.medieval.warfare.controller;
 
-import com.ynov.master.mobile.game.medieval.warfare.dto.SigninDataDTO;
-import com.ynov.master.mobile.game.medieval.warfare.dto.UserDataDTO;
-import com.ynov.master.mobile.game.medieval.warfare.dto.UserGamesResponseDTO;
-import com.ynov.master.mobile.game.medieval.warfare.dto.UserResponseDTO;
+import com.ynov.master.mobile.game.medieval.warfare.dto.*;
+import com.ynov.master.mobile.game.medieval.warfare.model.Game;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
+import com.ynov.master.mobile.game.medieval.warfare.service.GameService;
 import com.ynov.master.mobile.game.medieval.warfare.service.UserService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +13,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -23,6 +24,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    GameService gameService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -99,6 +103,16 @@ public class UserController {
     @ApiOperation(value = "Return current users games", response = UserGamesResponseDTO.class)
     UserGamesResponseDTO getUserGames(HttpServletRequest request) {
         User user = userService.whoami(request);
-        return modelMapper.map(user, UserGamesResponseDTO.class);
+        
+        UserGamesResponseDTO responseDTO = new UserGamesResponseDTO();
+        responseDTO.setId(user.getId().toString());
+
+        List<UserGamesPreviewResponseDTO> previewGames = user.getGames().stream().map(gameId -> {
+            Game game = gameService.getGame(gameId.toString());
+            return modelMapper.map(game, UserGamesPreviewResponseDTO.class);
+        }).collect(Collectors.toList());
+        responseDTO.setGames(previewGames);
+
+        return responseDTO;
     }
 }
