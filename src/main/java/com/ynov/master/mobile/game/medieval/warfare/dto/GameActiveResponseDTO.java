@@ -11,7 +11,7 @@ public class GameActiveResponseDTO {
     @ApiModelProperty(position = 0)
     String gameId;
 
-    @ApiModelProperty(position = 0)
+    @ApiModelProperty(position = 1)
     GameStatus status;
 
     public GameActiveResponseDTO(String gameId, GameStatus status) {
