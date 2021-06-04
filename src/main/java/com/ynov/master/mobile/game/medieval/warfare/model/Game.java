@@ -30,6 +30,8 @@ public class Game {
     @BsonProperty("weapons")
     List<Weapon> weapons;
 
+    @BsonProperty("map")
+    Map map;
 
     public Game addUser(User user) {
         this.users.add(user.getId().toString());

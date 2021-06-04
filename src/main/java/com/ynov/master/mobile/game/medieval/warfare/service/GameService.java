@@ -3,6 +3,7 @@ package com.ynov.master.mobile.game.medieval.warfare.service;
 import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
 import com.ynov.master.mobile.game.medieval.warfare.model.Game;
 import com.ynov.master.mobile.game.medieval.warfare.model.GameStatus;
+import com.ynov.master.mobile.game.medieval.warfare.model.Map;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
 import com.ynov.master.mobile.game.medieval.warfare.repository.GameRepository;
 import com.ynov.master.mobile.game.medieval.warfare.repository.UserRepository;
@@ -12,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -49,34 +48,32 @@ public class GameService {
         user.addGame(game);
         userRepository.update(user);
 
-        if(game.getUsers().size() == game.getMaxPlayers())
-        {
+        if (game.getUsers().size() == game.getMaxPlayers()) {
             game.setStatus(GameStatus.PLAYING);
-            // TODO : generate map
-            // TODO : generate random order
-            // TODO : send web push to player
         }
 
         gameRepository.update(game);
     }
 
 
-    public Game createNewGame(String name, Integer maxPlayers, User user) throws Exception {
+    public Game createNewGame(String name, Integer maxPlayers, User user, Map map) throws Exception {
 
-        if(maxPlayers < 2) {
+        if (maxPlayers < 2) {
             throw new CustomException("Max player must be greater or equals to 2", HttpStatus.BAD_REQUEST);
         }
 
         Game game = new Game();
+
         game.setId(new ObjectId());
         game.setName(name);
         game.setMaxPlayers(maxPlayers);
-
+        game.setMap(map);
         game.setUsers(Collections.singletonList(user.getId().toString()));
         game.setStatus(GameStatus.WAITING);
-        gameRepository.save(game);
 
         user.addGame(game);
+
+        gameRepository.save(game);
         userRepository.update(user);
 
         return game;

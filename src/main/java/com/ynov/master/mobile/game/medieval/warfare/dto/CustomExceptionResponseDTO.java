@@ -2,7 +2,6 @@ package com.ynov.master.mobile.game.medieval.warfare.dto;
 
 import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;

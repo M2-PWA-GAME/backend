@@ -5,9 +5,14 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 
 @Data
 public class Position {
-  @BsonProperty("x")
-  Integer X;
+    @BsonProperty("x")
+    Integer X;
 
-  @BsonProperty("y")
-  Integer Y;
+    @BsonProperty("y")
+    Integer Y;
+
+    public Position(int x, int y) {
+        this.X = x;
+        this.Y = y;
+    }
 }

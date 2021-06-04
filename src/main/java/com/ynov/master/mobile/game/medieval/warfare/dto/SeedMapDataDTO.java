@@ -4,21 +4,14 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class CreateGameDataDTO {
+public class SeedMapDataDTO {
 
     @ApiModelProperty(position = 0)
-    private String name;
-
-    @ApiModelProperty(position = 1)
-    private Integer maxPlayers;
-
-    @ApiModelProperty(position = 2)
     private Integer xMax;
 
-    @ApiModelProperty(position = 3)
+    @ApiModelProperty(position = 1)
     private Integer yMax;
 
-    @ApiModelProperty(position = 4)
+    @ApiModelProperty(position = 2)
     private Integer seed;
-
 }
