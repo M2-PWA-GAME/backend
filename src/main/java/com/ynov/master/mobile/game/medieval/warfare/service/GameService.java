@@ -57,8 +57,8 @@ public class GameService {
 
         // Si tous les joueurs attendu sont la
         if (game.getUsers().size() == game.getMaxPlayers()) {
-            game.setStatus(GameStatus.PLAYING);
             game.initGame();
+            game.setStatus(GameStatus.PLAYING);
 
             notificationHandler.sendNotifications(game.getUsers(),"Player list completed ! Good luck every one.");
             notificationHandler.sendNotification(game.getTurnOrder().get(0),"Your turn, start the game !");

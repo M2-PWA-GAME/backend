@@ -40,8 +40,8 @@ public class GameController {
     ModelMapper mapper;
 
     @GetMapping("/{code}")
-    @ApiOperation(value = "Get all game data")
-    public GameResponseDTO getFullGameData(HttpServletRequest req, @ApiParam("Game code") @PathVariable("code") String code) {
+    @ApiOperation(value = "Get game data without map")
+    public GameResponseDTO getFullGameDataWithoutMap(HttpServletRequest req, @ApiParam("Game code") @PathVariable("code") String code) {
         User user = userService.whoami(req);
         Game game = gameService.getGame(code);
 
@@ -49,16 +49,20 @@ public class GameController {
             throw new CustomException("you are not allowed to access a game if you are not part of it", HttpStatus.UNAUTHORIZED);
        }
 
-        GameResponseDTO responseDTO = null;
+        return mapper.map(game, GameResponseDTO.class);
+    }
 
-        try {
-            responseDTO = mapper.map(game, GameResponseDTO.class);
-        } catch (Exception e) {
-            System.out.println("here");
-            e.printStackTrace();
+    @GetMapping("/{code}/map")
+    @ApiOperation(value = "Get game's map")
+    public Map getFullGameData(HttpServletRequest req, @ApiParam("Game code") @PathVariable("code") String code) {
+        User user = userService.whoami(req);
+        Game game = gameService.getGame(code);
+
+        if (!game.getUsers().contains(user.getId().toString())) {
+            throw new CustomException("you are not allowed to access a game if you are not part of it", HttpStatus.UNAUTHORIZED);
         }
 
-        return responseDTO;
+        return game.getMap();
     }
 
     @GetMapping("/join/{code}")

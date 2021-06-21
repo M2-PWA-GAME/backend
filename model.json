@@ -41,12 +41,12 @@
             "player": "$objectID(Alban)",
             "actions": [
               {
-                "type": "deplacement",
+                "type": "MOVE",
                 "from": { "x": 5, "y": 17 },
                 "to": { "x": 8, "y": 18 }
               },
               {
-                "type": "taper",
+                "type": "HIT",
                 "from": { "x": 8, "y": 18 },
                 "to": { "x": 1, "y": 8 }
               }
