@@ -5,12 +5,14 @@ import com.ynov.master.mobile.game.medieval.warfare.model.Map;
 import com.ynov.master.mobile.game.medieval.warfare.model.Tile;
 import com.ynov.master.mobile.game.medieval.warfare.model.TileType;
 import com.ynov.master.mobile.game.medieval.warfare.util.PerlinNoise;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class MapService {
 
@@ -61,21 +63,21 @@ public class MapService {
                 tiles.add(nTile);
 
 
-//                switch (nTile.getType()) {
-//                    case ROCK:
-//                        System.out.print(ANSI_RED + "■  " + ANSI_RESET);
-//                        break;
-//                    case GRASS:
-//                        System.out.print(ANSI_GREEN + "■  " + ANSI_RESET);
-//                        break;
-//                    case WATER:
-//                        System.out.print(ANSI_BLUE + "■  " + ANSI_RESET);
-//                        break;
-//                }
-//
-//                if (x == xMax - 1) {
-//                    System.out.println();
-//                }
+                switch (nTile.getType()) {
+                    case ROCK:
+                        System.out.print(ANSI_RED + "■  " + ANSI_RESET);
+                        break;
+                    case GRASS:
+                        System.out.print(ANSI_GREEN + "■  " + ANSI_RESET);
+                        break;
+                    case WATER:
+                        System.out.print(ANSI_BLUE + "■  " + ANSI_RESET);
+                        break;
+                }
+
+                if (x == xMax - 1) {
+                    System.out.println();
+                }
 
             }
         }

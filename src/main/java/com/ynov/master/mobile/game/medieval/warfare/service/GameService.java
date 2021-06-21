@@ -1,10 +1,7 @@
 package com.ynov.master.mobile.game.medieval.warfare.service;
 
 import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
-import com.ynov.master.mobile.game.medieval.warfare.model.Game;
-import com.ynov.master.mobile.game.medieval.warfare.model.GameStatus;
-import com.ynov.master.mobile.game.medieval.warfare.model.Map;
-import com.ynov.master.mobile.game.medieval.warfare.model.User;
+import com.ynov.master.mobile.game.medieval.warfare.model.*;
 import com.ynov.master.mobile.game.medieval.warfare.repository.GameRepository;
 import com.ynov.master.mobile.game.medieval.warfare.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Service
@@ -25,6 +26,8 @@ public class GameService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    NotifificationService notificationHandler;
 
     public void joinGameWithCode(String joinCode, User user) throws Exception {
         Game game = gameRepository.findGameById(joinCode);
@@ -35,7 +38,11 @@ public class GameService {
     }
 
     public Game getGame(String gameId) {
-        return gameRepository.findGameById(gameId);
+        Game game = gameRepository.findGameById(gameId);
+        if( game == null){
+            throw new CustomException("Game with id " + gameId + " not found",HttpStatus.NOT_FOUND);
+        }
+        return game;
     }
 
     public void userJoinGame(Game game, User user) throws Exception {
@@ -48,13 +55,22 @@ public class GameService {
         user.addGame(game);
         userRepository.update(user);
 
+        // Si tous les joueurs attendu sont la
         if (game.getUsers().size() == game.getMaxPlayers()) {
             game.setStatus(GameStatus.PLAYING);
+            game.initGame();
+
+            notificationHandler.sendNotifications(game.getUsers(),"Player list completed ! Good luck every one.");
+            notificationHandler.sendNotification(game.getTurnOrder().get(0),"Your turn, start the game !");
         }
 
-        gameRepository.update(game);
-    }
+        try{
+            gameRepository.update(game);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+    }
 
     public Game createNewGame(String name, Integer maxPlayers, User user, Map map) throws Exception {
 

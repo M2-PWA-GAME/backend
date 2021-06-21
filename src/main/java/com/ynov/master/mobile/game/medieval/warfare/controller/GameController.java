@@ -3,6 +3,7 @@ package com.ynov.master.mobile.game.medieval.warfare.controller;
 import com.ynov.master.mobile.game.medieval.warfare.dto.CreateGameDataDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.CreateGameResponseDTO;
 import com.ynov.master.mobile.game.medieval.warfare.dto.GameActiveResponseDTO;
+import com.ynov.master.mobile.game.medieval.warfare.dto.GameResponseDTO;
 import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
 import com.ynov.master.mobile.game.medieval.warfare.model.Game;
 import com.ynov.master.mobile.game.medieval.warfare.model.Map;
@@ -12,6 +13,7 @@ import com.ynov.master.mobile.game.medieval.warfare.service.MapService;
 import com.ynov.master.mobile.game.medieval.warfare.service.UserService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,31 @@ public class GameController {
 
     @Autowired
     private MapService mapService;
+
+    @Autowired
+    ModelMapper mapper;
+
+    @GetMapping("/{code}")
+    @ApiOperation(value = "Get all game data")
+    public GameResponseDTO getFullGameData(HttpServletRequest req, @ApiParam("Game code") @PathVariable("code") String code) {
+        User user = userService.whoami(req);
+        Game game = gameService.getGame(code);
+
+        if (!game.getUsers().contains(user.getId().toString())) {
+            throw new CustomException("you are not allowed to access a game if you are not part of it", HttpStatus.UNAUTHORIZED);
+       }
+
+        GameResponseDTO responseDTO = null;
+
+        try {
+            responseDTO = mapper.map(game, GameResponseDTO.class);
+        } catch (Exception e) {
+            System.out.println("here");
+            e.printStackTrace();
+        }
+
+        return responseDTO;
+    }
 
     @GetMapping("/join/{code}")
     @ApiOperation(value = "Join a new game")

@@ -4,7 +4,12 @@ import lombok.Data;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Data
 public class Game {
@@ -24,8 +29,8 @@ public class Game {
     @BsonProperty("users")
     List<String> users;
 
-    @BsonProperty("turns")
-    List<Turn> turns;
+    @BsonProperty("rounds")
+    List<Round> rounds;
 
     @BsonProperty("weapons")
     List<Weapon> weapons;
@@ -33,9 +38,54 @@ public class Game {
     @BsonProperty("map")
     Map map;
 
-    public Game addUser(User user) {
+    @BsonProperty("turnOrder")
+    HashMap<String, String> turnOrder;
+
+    public void addUser(User user) {
         this.users.add(user.getId().toString());
-        return this;
+    }
+
+    public void initGame() {
+
+        List<String> usersList = users;
+
+        // Random Order
+        Collections.shuffle(usersList);
+        HashMap<String, String> order = new HashMap<>();
+        IntStream.range(0, this.getMaxPlayers()).forEach(index ->
+                order.put(String.valueOf(index), usersList.get(index))
+        );
+        this.setTurnOrder(order);
+
+        // Initial States with player health & weapons
+        List<PlayerState> pStates = usersList.stream().map(PlayerState::initialState).collect(Collectors.toList());
+
+        // Initial position
+        Random random = new Random();
+        List<Position> possiblePosition = this.getMap().getTiles().stream()
+                .filter(t -> t.isNavigable)
+                .map(Tile::getPosition)
+                .collect(Collectors.toList());
+
+        Collections.shuffle(possiblePosition);
+
+        pStates.forEach(s -> {
+            int randomInt = random.nextInt(map.getXMax());
+            s.setPosition(possiblePosition.get(randomInt));
+        });
+
+        Turn initialTurn = new Turn();
+        initialTurn.setPlayersStates(pStates);
+        initialTurn.setActions(null);
+        initialTurn.setPlayerId(null);
+
+        // initial Round ( 1 Round = All player turns )
+        Round initialRound = new Round();
+        initialRound.setIndex(0);
+        initialRound.setTurns(Collections.singletonList(initialTurn));
+        initialRound.setState(TurnState.FINISH);
+
+        this.setRounds(Collections.singletonList(initialRound));
     }
 
 
