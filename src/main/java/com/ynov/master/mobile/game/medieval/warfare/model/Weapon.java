@@ -1,5 +1,6 @@
 package com.ynov.master.mobile.game.medieval.warfare.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
@@ -17,4 +18,14 @@ public class Weapon {
 
     @BsonProperty("range")
     Integer range;
+
+    public Weapon(String name, int damages, int range) {
+        this.setId(new ObjectId());
+        this.setName(name);
+        this.setDamages(damages);
+        this.setRange(range);
+    }
+
+    public Weapon() {
+    }
 }

@@ -20,4 +20,18 @@ public class PlayerState {
 
     @BsonProperty("weapon")
     Weapon weapon;
+
+    public static PlayerState initialState(String playerId)
+    {
+        PlayerState state = new PlayerState();
+        state.setId(new ObjectId(playerId));
+        state.setHealth(20);
+        state.setArmor(0);
+        state.setWeapon(new Weapon("KNIFE",1,1));
+
+        return state;
+    }
+
+    public PlayerState() {
+    }
 }

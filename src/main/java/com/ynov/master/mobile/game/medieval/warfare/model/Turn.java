@@ -5,14 +5,17 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
 import java.util.List;
+
+
 @Data
 public class Turn {
-  @BsonProperty("_id")
-  private ObjectId id;
+    @BsonProperty("actions")
+    List<Action> actions;
 
-  @BsonProperty("actions")
-  List<Action> actions;
+    @BsonProperty("players_states")
+    List<PlayerState> playersStates;
 
-  @BsonProperty("player_states")
-  List<PlayerState> playerStates;
+    @BsonProperty("player_id")
+    private ObjectId playerId;
+
 }
