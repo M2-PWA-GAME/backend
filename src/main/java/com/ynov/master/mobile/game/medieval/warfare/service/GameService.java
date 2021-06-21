@@ -104,6 +104,20 @@ public class GameService {
             throw new CustomException("This is not your turn", HttpStatus.UNAUTHORIZED);
         }
 
+        List<PlayerState> lastPlayerStates = game.getLastRound().getLastTurn().getPlayersStates();
+        PlayerState currentPlayerState = lastPlayerStates
+                .stream()
+                .filter(state -> state.getId().toString() == user.getId().toString())
+                .findFirst()
+                .orElse(null);
+
+        if (currentPlayerState == null) {
+            throw new CustomException("Something weird happened", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+        this.isActionValid(action, currentPlayerState, game.getMap());
+
         return null;
     }
 
@@ -113,9 +127,8 @@ public class GameService {
     }
 
     private Boolean isPlayerTurn(Game game, User user) {
-        List<Round> rounds = game.getSortedRounds();
         String userId = user.getId().toString();
-        Round lastRound = rounds.get(rounds.size() - 1);
+        Round lastRound = game.getLastRound();
 
         if (lastRound.getState() == TurnState.FINISH) {
             String firstUser = game.getTurnOrder().get("0");
@@ -139,6 +152,43 @@ public class GameService {
             return test.getKey();
         }
         return null;
+    }
+
+    private Boolean isActionValid(ActionDTO action, PlayerState lastState, Map map) {
+
+        switch (action.getActionType()) {
+            case MOVE:
+                return makeMove(action, lastState, map);
+            case HIT:
+                return makeAttack();
+            default:
+                return false;
+        }
+    }
+
+    private Boolean makeMove(ActionDTO action, PlayerState lastState, Map map) {
+
+        Position lastPosition = lastState.getPosition();
+        Position actionFrom = action.getFrom();
+
+        if (lastPosition.getX() != actionFrom.getX() || actionFrom.getY() != lastPosition.getY()) {
+            throw new CustomException("Try not to cheat please", HttpStatus.BAD_REQUEST);
+        }
+
+        Position actionMovement = action.getTo();
+        Tile landingTile = map.findTile(actionMovement.getX(), actionMovement.getY());
+        if (!landingTile.getIsNavigable()) {
+            throw new CustomException("You cant walk there", HttpStatus.BAD_REQUEST);
+        }
+
+        // TODO: Check if he can walk to this tile : Cant remember the range he can walk to.
+
+        return true;
+    }
+
+
+    private Boolean makeAttack() {
+        return true;
     }
 
 }

@@ -90,4 +90,8 @@ public class Game {
         return this.getRounds().stream().sorted(Comparator.comparingInt(Round::getIndex)).collect(Collectors.toList());
     }
 
+    public Round getLastRound() {
+        return this.getSortedRounds().get(this.getSortedRounds().size() - 1);
+    }
+
 }
