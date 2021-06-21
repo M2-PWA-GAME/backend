@@ -100,7 +100,7 @@ public class GameService {
             throw new CustomException("You are not in this game", HttpStatus.UNAUTHORIZED);
         }
 
-        if (this.isPlayerTurn(game, user)) {
+        if (!this.isPlayerTurn(game, user)) {
             throw new CustomException("This is not your turn", HttpStatus.UNAUTHORIZED);
         }
 
