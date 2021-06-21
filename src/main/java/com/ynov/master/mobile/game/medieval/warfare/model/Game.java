@@ -4,10 +4,7 @@ import lombok.Data;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -39,7 +36,7 @@ public class Game {
     Map map;
 
     @BsonProperty("turnOrder")
-    HashMap<String, String> turnOrder;
+    HashMap<Integer, String> turnOrder;
 
     public void addUser(User user) {
         this.users.add(user.getId().toString());
@@ -51,9 +48,9 @@ public class Game {
 
         // Random Order
         Collections.shuffle(usersList);
-        HashMap<String, String> order = new HashMap<>();
+        HashMap<Integer, String> order = new HashMap<>();
         IntStream.range(0, this.getMaxPlayers()).forEach(index ->
-                order.put(String.valueOf(index), usersList.get(index))
+                order.put(index, usersList.get(index))
         );
         this.setTurnOrder(order);
 
@@ -88,5 +85,9 @@ public class Game {
         this.setRounds(Collections.singletonList(initialRound));
     }
 
+
+    public List<Round> getSortedRounds() {
+        return this.getRounds().stream().sorted(Comparator.comparingInt(Round::getIndex)).collect(Collectors.toList());
+    }
 
 }
