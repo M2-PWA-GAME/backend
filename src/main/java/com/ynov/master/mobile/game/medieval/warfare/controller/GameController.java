@@ -1,9 +1,6 @@
 package com.ynov.master.mobile.game.medieval.warfare.controller;
 
-import com.ynov.master.mobile.game.medieval.warfare.dto.CreateGameDataDTO;
-import com.ynov.master.mobile.game.medieval.warfare.dto.CreateGameResponseDTO;
-import com.ynov.master.mobile.game.medieval.warfare.dto.GameActiveResponseDTO;
-import com.ynov.master.mobile.game.medieval.warfare.dto.GameResponseDTO;
+import com.ynov.master.mobile.game.medieval.warfare.dto.*;
 import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
 import com.ynov.master.mobile.game.medieval.warfare.model.Game;
 import com.ynov.master.mobile.game.medieval.warfare.model.Map;
@@ -47,7 +44,7 @@ public class GameController {
 
         if (!game.getUsers().contains(user.getId().toString())) {
             throw new CustomException("you are not allowed to access a game if you are not part of it", HttpStatus.UNAUTHORIZED);
-       }
+        }
 
         return mapper.map(game, GameResponseDTO.class);
     }
@@ -110,6 +107,17 @@ public class GameController {
         if (game == null)
             throw new CustomException("Game not found", HttpStatus.NOT_FOUND);
         return new GameActiveResponseDTO(game.getId().toString(), game.getStatus());
+    }
+
+    @PostMapping("/{code}/turn")
+    @ApiOperation(value = "Play a turn")
+    @ApiResponses(
+            value = {@ApiResponse(code = 400, message = "Something went wrong")}
+    )
+    public GameResponseDTO playTurn(HttpServletRequest req, @ApiParam("new player action datas") @RequestBody ActionDTO action,
+                                    @ApiParam("Game code") @PathVariable("code") String code) throws Exception {
+        User currentUser = userService.whoami(req);
+        return mapper.map(gameService.playTurn(currentUser, action, code), GameResponseDTO.class);
     }
 
 }

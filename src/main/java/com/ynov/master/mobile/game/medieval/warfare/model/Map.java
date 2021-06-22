@@ -7,11 +7,20 @@ import java.util.List;
 @Data
 public class Map {
 
-  private int seed;
+    private int seed;
 
-  private int xMax;
+    private int xMax;
 
-  private int yMax;
+    private int yMax;
 
-  List<Tile> tiles;
+    List<Tile> tiles;
+
+
+    public Tile findTile(Integer posX, Integer posY) {
+        return tiles.stream()
+                .filter(tile -> tile.getPosition().getY() == posY && tile.getPosition().getX() == posX)
+                .findFirst()
+                .orElse(null);
+    }
+
 }

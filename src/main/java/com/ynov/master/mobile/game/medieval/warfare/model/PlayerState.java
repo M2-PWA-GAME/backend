@@ -4,6 +4,8 @@ import lombok.Data;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
+import javax.print.attribute.standard.JobKOctets;
+
 @Data
 public class PlayerState {
     @BsonProperty("_id")
@@ -33,5 +35,15 @@ public class PlayerState {
     }
 
     public PlayerState() {
+    }
+
+    public static PlayerState clone(PlayerState state) {
+        PlayerState newState = new PlayerState();
+        newState.setPosition(state.getPosition());
+        newState.setArmor(state.getArmor());
+        newState.setHealth(state.getHealth());
+        newState.setId(state.getId());
+        newState.setWeapon(state.getWeapon());
+        return newState ;
     }
 }

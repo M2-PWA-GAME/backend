@@ -1,6 +1,6 @@
 package com.ynov.master.mobile.game.medieval.warfare.model;
 
-public enum TurnState {
+public enum RoundState {
     NEW,
     PLAYING,
     FINISH
