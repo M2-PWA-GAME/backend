@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -83,10 +84,32 @@ public class Game {
         Round initialRound = new Round();
         initialRound.setIndex(0);
         initialRound.setTurns(Collections.singletonList(initialTurn));
-        initialRound.setState(TurnState.FINISH);
+        initialRound.setState(RoundState.FINISH);
 
         this.setRounds(Collections.singletonList(initialRound));
     }
 
+
+    public List<Round> sortedRounds() {
+        return this.getRounds().stream().sorted(Comparator.comparingInt(Round::getIndex)).collect(Collectors.toList());
+    }
+
+    public Round lastRound() {
+        return this.sortedRounds().get(this.sortedRounds().size() - 1);
+    }
+
+
+    public Round addRound() {
+        Round newRound = new Round();
+        newRound.setIndex(this.rounds.size());
+        this.rounds.add(newRound);
+        return this.lastRound();
+    }
+
+    public Boolean hasWinner() {
+        List<PlayerState> test = this.lastRound().lastTurn().getPlayersStates().stream().filter(playerState -> playerState.getHealth() > 0)
+                .collect(Collectors.toList());
+        return test.size() <= 1;
+    }
 
 }

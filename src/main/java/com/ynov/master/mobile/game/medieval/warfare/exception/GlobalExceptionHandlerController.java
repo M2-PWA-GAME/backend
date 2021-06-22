@@ -1,6 +1,7 @@
 package com.ynov.master.mobile.game.medieval.warfare.exception;
 
 import com.ynov.master.mobile.game.medieval.warfare.dto.CustomExceptionResponseDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandlerController {
 
@@ -43,7 +45,8 @@ public class GlobalExceptionHandlerController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleException(HttpServletResponse res) throws IOException {
+    public void handleException(HttpServletResponse res, Exception e) throws IOException {
+        e.printStackTrace();
         res.sendError(HttpStatus.BAD_REQUEST.value(), "Something went wrong");
     }
 
