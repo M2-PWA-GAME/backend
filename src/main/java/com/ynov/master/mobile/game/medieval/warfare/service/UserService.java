@@ -6,6 +6,7 @@ import com.ynov.master.mobile.game.medieval.warfare.model.User;
 import com.ynov.master.mobile.game.medieval.warfare.repository.UserRepository;
 import com.ynov.master.mobile.game.medieval.warfare.security.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -71,8 +72,8 @@ public class UserService {
         userRepository.deleteByUsername(username);
     }
 
-    public User search(String username) {
-        User user = userRepository.findById(username);
+    public User search(String id) {
+        User user = userRepository.findById(id);
         if (user == null) {
             log.error("The user doesn't exist");
             throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);

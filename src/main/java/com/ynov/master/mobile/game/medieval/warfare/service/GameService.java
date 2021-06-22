@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+
 @Slf4j
 @Service
 public class GameService {
@@ -28,7 +29,7 @@ public class GameService {
     UserRepository userRepository;
 
     @Autowired
-    NotifificationService notificationHandler;
+    NotificationService notificationHandler;
 
     @Autowired
     ModelMapper mapper;
@@ -64,8 +65,8 @@ public class GameService {
             game.initGame();
             game.setStatus(GameStatus.PLAYING);
 
-            notificationHandler.sendNotifications(game.getUsers(), "Player list completed ! Good luck every one.");
-            notificationHandler.sendNotification(game.getTurnOrder().get(0), "Your turn, start the game !");
+            notificationHandler.gameStarted(game.getUsers(),game.getId().toString());
+            notificationHandler.yourTurnNotification(game.getTurnOrder().get("0"),game.getId().toString());
         }
 
         try {
