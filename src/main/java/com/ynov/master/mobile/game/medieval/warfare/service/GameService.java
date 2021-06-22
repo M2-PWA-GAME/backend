@@ -60,6 +60,8 @@ public class GameService {
             game.initGame();
             game.setStatus(GameStatus.PLAYING);
 
+            notificationHandler.gameStarted(game.getUsers(),game.getId().toString());
+            notificationHandler.yourTurnNotification(game.getTurnOrder().get("0"),game.getId().toString());
         }
 
         try{

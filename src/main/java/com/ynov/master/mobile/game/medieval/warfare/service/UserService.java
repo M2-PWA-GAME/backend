@@ -72,8 +72,8 @@ public class UserService {
         userRepository.deleteByUsername(username);
     }
 
-    public User search(String username) {
-        User user = userRepository.findById(username);
+    public User search(String id) {
+        User user = userRepository.findById(id);
         if (user == null) {
             log.error("The user doesn't exist");
             throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);

@@ -20,7 +20,7 @@ firebase-cloud-messaging:
     client-x509-cert-url: "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-8hw2l%40medieval-warfare.iam.gserviceaccount.com"
     private-key-id: ${APP_PRIVATE_KEY_ID}
     private-key:  ${APP_PRIVATE_KEY}
-
+    time-to-live: 300
 
 security:
   jwt:
