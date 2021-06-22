@@ -1,9 +1,6 @@
 package com.ynov.master.mobile.game.medieval.warfare.service;
 
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.WebpushConfig;
-import com.google.firebase.messaging.WebpushNotification;
+import com.google.firebase.messaging.*;
 import com.ynov.master.mobile.game.medieval.warfare.model.Game;
 import com.ynov.master.mobile.game.medieval.warfare.model.NotificationType;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
@@ -13,13 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Service
-public class NotifificationService {
+public class NotificationService {
 
     @Autowired
     private WebpushConfig.Builder configBuilder;
@@ -74,6 +73,18 @@ public class NotifificationService {
         data.put("gameId", game.getId().toString());
 
         usersId.forEach(id -> sendNotification(id, notification, data));
+    }
+
+    public void susbcribe(String topic, String clientToken)
+    {
+        try {
+            TopicManagementResponse response = messageHandler.subscribeToTopicAsync(Collections.singletonList(clientToken), topic).get();
+            System.out
+                    .println(response.getSuccessCount() + " tokens were subscribed successfully");
+        }
+        catch (InterruptedException | ExecutionException e) {
+            log.error("subscribe",e);
+        }
     }
 
 }
