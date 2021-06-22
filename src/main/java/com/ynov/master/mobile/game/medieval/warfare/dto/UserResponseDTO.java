@@ -11,7 +11,7 @@ import org.bson.types.ObjectId;
 public class UserResponseDTO {
 
     @ApiModelProperty(position = 0)
-    private ObjectId id;
+    private String id;
 
     @ApiModelProperty(position = 1)
     private String username;
