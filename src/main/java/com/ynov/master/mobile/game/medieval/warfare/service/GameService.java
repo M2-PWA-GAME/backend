@@ -212,11 +212,18 @@ public class GameService {
             case HIT:
                 return makeAttack(action, lastState, game);
             case PASS:
-                //TODO
+                return makePass(action, game);
             default:
                 return null;
 
         }
+    }
+
+
+    private List<PlayerState> makePass(ActionDTO action, Game game) {
+        List<PlayerState> lastStates = game.getLastRound().getLastTurn().getPlayersStates();
+        this.addActionToTurn(game, action);
+        return lastStates;
     }
 
     private List<PlayerState> makeAttack(ActionDTO action, PlayerState lastState, Game game) {
@@ -264,6 +271,8 @@ public class GameService {
                 .orElse(null);
 
         if (changeState != null) changeState.setPosition(action.getTo());
+
+        //TODO Changer arme si marche sur une case avec
 
         return nextStates;
     }
