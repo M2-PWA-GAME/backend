@@ -7,6 +7,7 @@ import com.ynov.master.mobile.game.medieval.warfare.repository.GameRepository;
 import com.ynov.master.mobile.game.medieval.warfare.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ public class GameService {
 
     @Autowired
     NotifificationService notificationHandler;
+
+    @Autowired
+    ModelMapper mapper;
 
     public void joinGameWithCode(String joinCode, User user) throws Exception {
         Game game = gameRepository.findGameById(joinCode);
@@ -116,7 +120,7 @@ public class GameService {
         }
 
 
-        this.isActionValid(action, currentPlayerState, game.getMap());
+        this.executeAction(action, currentPlayerState, game.getMap(), game);
 
         return null;
     }
@@ -130,7 +134,7 @@ public class GameService {
         String userId = user.getId().toString();
         Round lastRound = game.getLastRound();
 
-        if (lastRound.getState() == TurnState.FINISH) {
+        if (lastRound.getState() == RoundState.FINISH) {
             String firstUser = game.getTurnOrder().get("0");
             return firstUser != userId ? false : true;
         } else {
@@ -147,48 +151,79 @@ public class GameService {
     }
 
     private Integer getPlayerOrder(Game game, String userID) {
-        Entry<Integer, String> test = game.getTurnOrder().entrySet().stream().filter((key) -> userID.equals(key.getValue())).findFirst().orElse(null);
+        Entry<String, String> test = game.getTurnOrder().entrySet().stream().filter((key) -> userID.equals(key.getValue())).findFirst().orElse(null);
         if (test != null) {
-            return test.getKey();
+            return Integer.getInteger(test.getKey());
         }
         return null;
     }
 
-    private Boolean isActionValid(ActionDTO action, PlayerState lastState, Map map) {
+    private void executeAction(ActionDTO action, PlayerState lastState, Map map, Game game) {
+
+        if (game.getLastRound().getState() == RoundState.FINISH) {
+            game.addRound();
+        }
 
         switch (action.getActionType()) {
             case MOVE:
-                return makeMove(action, lastState, map);
+                makeMove(action, lastState, map, game);
+                break;
             case HIT:
-                return makeAttack();
+                makeAttack(action, lastState, game);
+                break;
+            case PASS:
+                //TODO
+                break;
             default:
-                return false;
+                break;
         }
     }
 
-    private Boolean makeMove(ActionDTO action, PlayerState lastState, Map map) {
+    private void makeAttack(ActionDTO action, PlayerState lastState, Game game) {
+        this.checkLastPosition(lastState, action.getFrom());
+        this.addActionToTurn(game, action);
+        List<PlayerState> lastStates = game.getLastRound().getLastTurn().getPlayersStates();
 
-        Position lastPosition = lastState.getPosition();
-        Position actionFrom = action.getFrom();
+        List<PlayerState> nextStates = lastStates;
+        lastStates.forEach((playerState) -> {
+            if (playerState.getPosition().getX() == action.getTo().getX() && playerState.getPosition().getY() == action.getTo().getY()) {
+                PlayerState state = nextStates.get(nextStates.indexOf(playerState));
+                Integer damages = lastState.getWeapon().getDamages();
+                if (state.getArmor() <= damages) {
+                    state.setHealth(state.getHealth() - (damages - state.getArmor()));
+                    state.setArmor(0);
+                } else {
+                    state.setArmor(state.getArmor() - damages);
+                }
 
-        if (lastPosition.getX() != actionFrom.getX() || actionFrom.getY() != lastPosition.getY()) {
-            throw new CustomException("Try not to cheat please", HttpStatus.BAD_REQUEST);
-        }
+            }
+        });
+
+    }
+
+    private void addActionToTurn(Game game, ActionDTO action) {
+        game.getLastRound().getLastTurn().addAction(mapper.map(action, Action.class));
+    }
+
+    private void makeMove(ActionDTO action, PlayerState lastState, Map map, Game game) {
+
+        this.checkLastPosition(lastState, action.getFrom());
 
         Position actionMovement = action.getTo();
         Tile landingTile = map.findTile(actionMovement.getX(), actionMovement.getY());
         if (!landingTile.getIsNavigable()) {
             throw new CustomException("You cant walk there", HttpStatus.BAD_REQUEST);
         }
+        this.addActionToTurn(game, action);
 
-        // TODO: Check if he can walk to this tile : Cant remember the range he can walk to.
 
-        return true;
     }
 
-
-    private Boolean makeAttack() {
-        return true;
+    private void checkLastPosition(PlayerState lastState, Position from) {
+        Position lastPosition = lastState.getPosition();
+        if (lastPosition.getX() != from.getX() || from.getY() != lastPosition.getY()) {
+            throw new CustomException("Try not to cheat please", HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

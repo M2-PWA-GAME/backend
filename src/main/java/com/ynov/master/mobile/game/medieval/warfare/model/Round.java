@@ -11,18 +11,11 @@ public class Round {
 
     List<Turn> turns;
 
-    TurnState state = TurnState.NEW;
+    RoundState state = RoundState.NEW;
 
     public Round() {
     }
 
-    public void addTurn(Turn turn) {
-        if (state == TurnState.NEW) {
-            state = TurnState.PLAYING;
-        }
-
-        this.turns.add(turn);
-    }
 
 
     public Turn getLastTurn() {

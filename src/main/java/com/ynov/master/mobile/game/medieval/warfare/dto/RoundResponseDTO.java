@@ -1,7 +1,6 @@
 package com.ynov.master.mobile.game.medieval.warfare.dto;
 
-import com.ynov.master.mobile.game.medieval.warfare.model.Turn;
-import com.ynov.master.mobile.game.medieval.warfare.model.TurnState;
+import com.ynov.master.mobile.game.medieval.warfare.model.RoundState;
 import lombok.Data;
 
 import java.util.List;
@@ -12,6 +11,6 @@ public class RoundResponseDTO {
 
     List<TurnResponseDTO> turns;
 
-    TurnState state;
+    RoundState state;
 
 }

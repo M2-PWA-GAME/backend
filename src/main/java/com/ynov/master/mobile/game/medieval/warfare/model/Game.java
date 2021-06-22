@@ -36,7 +36,7 @@ public class Game {
     Map map;
 
     @BsonProperty("turnOrder")
-    HashMap<Integer, String> turnOrder;
+    HashMap<String, String> turnOrder;
 
     public void addUser(User user) {
         this.users.add(user.getId().toString());
@@ -48,9 +48,9 @@ public class Game {
 
         // Random Order
         Collections.shuffle(usersList);
-        HashMap<Integer, String> order = new HashMap<>();
+        HashMap<String, String> order = new HashMap<>();
         IntStream.range(0, this.getMaxPlayers()).forEach(index ->
-                order.put(index, usersList.get(index))
+                order.put(String.valueOf(index), usersList.get(index))
         );
         this.setTurnOrder(order);
 
@@ -80,7 +80,7 @@ public class Game {
         Round initialRound = new Round();
         initialRound.setIndex(0);
         initialRound.setTurns(Collections.singletonList(initialTurn));
-        initialRound.setState(TurnState.FINISH);
+        initialRound.setState(RoundState.FINISH);
 
         this.setRounds(Collections.singletonList(initialRound));
     }
@@ -92,6 +92,12 @@ public class Game {
 
     public Round getLastRound() {
         return this.getSortedRounds().get(this.getSortedRounds().size() - 1);
+    }
+
+
+    public Round addRound() {
+        this.rounds.add(new Round());
+        return this.getLastRound();
     }
 
 }
