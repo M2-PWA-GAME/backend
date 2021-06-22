@@ -191,7 +191,7 @@ public class GameService {
     }
 
     public String whoseTurn(Game game){
-        return game.getTurnOrder().entrySet().stream().filter(o -> isPlayerTurn(game,o.getValue())).findFirst().toString();
+        return game.getTurnOrder().values().stream().filter(s -> isPlayerTurn(game, s)).findFirst().orElse(null);
     }
 
     private Boolean isPlayerDead(Game game, String userId) {
