@@ -7,9 +7,6 @@ import org.bson.types.ObjectId;
 @Data
 public class Action {
 
-    @BsonProperty("_id")
-    private ObjectId id;
-
     @BsonProperty("action_type")
     ActionType actionType;
 

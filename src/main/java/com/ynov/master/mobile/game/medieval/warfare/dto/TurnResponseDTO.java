@@ -13,7 +13,7 @@ public class TurnResponseDTO {
     private String playerId;
 
     @BsonProperty("actions")
-    List<Action> actions;
+    List<ActionResponseDTO> actions;
 
     @BsonProperty("players_states")
     List<PlayerStateResponserDTO> playersStates;
