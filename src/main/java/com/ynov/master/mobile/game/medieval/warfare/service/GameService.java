@@ -111,7 +111,7 @@ public class GameService {
             throw new CustomException("The game is FINISHED", HttpStatus.LOCKED);
         }
 
-        if (!this.isPlayerTurn(game, user)) {
+        if (!this.isPlayerTurn(game, user.getId().toString())) {
             throw new CustomException("This is not your turn", HttpStatus.LOCKED);
         }
 
@@ -168,8 +168,8 @@ public class GameService {
         return game.getUsers().contains(user.getId().toString());
     }
 
-    private Boolean isPlayerTurn(Game game, User user) {
-        String userId = user.getId().toString();
+    private Boolean isPlayerTurn(Game game, String userId) {
+
         Round lastRound = game.lastRound();
 
         if (isPlayerDead(game, userId)) {
@@ -188,6 +188,10 @@ public class GameService {
             Integer currentPlayerOrder = this.getPlayerOrder(game, userId);
             return lastPlayerOrder == currentPlayerOrder - 1;
         }
+    }
+
+    public String whoseTurn(Game game){
+        return game.getTurnOrder().entrySet().stream().filter(o -> isPlayerTurn(game,o.getValue())).findFirst().toString();
     }
 
     private Boolean isPlayerDead(Game game, String userId) {

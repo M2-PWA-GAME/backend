@@ -1,5 +1,6 @@
 package com.ynov.master.mobile.game.medieval.warfare.controller;
 
+import com.google.api.Http;
 import com.ynov.master.mobile.game.medieval.warfare.dto.*;
 import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
 import com.ynov.master.mobile.game.medieval.warfare.model.Game;
@@ -118,6 +119,22 @@ public class GameController {
                                     @ApiParam("Game code") @PathVariable("code") String code) throws Exception {
         User currentUser = userService.whoami(req);
         return mapper.map(gameService.playTurn(currentUser, action, code), GameResponseDTO.class);
+    }
+
+    @GetMapping("/{code}/whoseturn")
+    @ApiOperation(value = "Get player id whose turn")
+    @ApiResponses(
+            value = {@ApiResponse(code = 400, message = "Something went wrong")}
+    )
+    public WhoseTurnResponseDTO whoseTurn(HttpServletRequest req, @ApiParam("Game code") @PathVariable("code") String code) {
+        User usr = userService.whoami(req);
+        Game game = gameService.getGame(code);
+
+        if(!game.getUsers().contains(usr.getId().toString())){
+            throw new CustomException("You are not in this game", HttpStatus.FORBIDDEN);
+        }
+
+        return new WhoseTurnResponseDTO(gameService.whoseTurn(game));
     }
 
 }
