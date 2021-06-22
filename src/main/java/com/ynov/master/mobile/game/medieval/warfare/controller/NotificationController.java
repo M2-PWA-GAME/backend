@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/notifications")
-@Api(tags = "users")
+@Api(tags = "notifications")
 public class NotificationController {
 
     @Autowired
