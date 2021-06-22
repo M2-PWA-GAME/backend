@@ -115,10 +115,10 @@ public class GameController {
     @ApiResponses(
             value = {@ApiResponse(code = 400, message = "Something went wrong")}
     )
-    public Action playTurn(HttpServletRequest req, @ApiParam("Game creation datas") @RequestBody ActionDTO action,
-                           @ApiParam("Game code") @PathVariable("code") String code) {
+    public Game playTurn(HttpServletRequest req, @ApiParam("Game creation datas") @RequestBody ActionDTO action,
+                           @ApiParam("Game code") @PathVariable("code") String code) throws Exception {
         User currentUser = userService.whoami(req);
-        return gameService.executeAction(currentUser, action, code);
+        return gameService.playTurn(currentUser, action, code);
     }
 
 }

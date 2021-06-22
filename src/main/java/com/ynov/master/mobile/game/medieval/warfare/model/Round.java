@@ -16,6 +16,13 @@ public class Round {
     public Round() {
     }
 
+    public void addTurn(Turn turn) {
+        if (state == RoundState.NEW) {
+            state = RoundState.PLAYING;
+        }
+
+        this.turns.add(turn);
+    }
 
 
     public Turn getLastTurn() {

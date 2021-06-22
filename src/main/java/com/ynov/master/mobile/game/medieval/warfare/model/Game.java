@@ -100,4 +100,10 @@ public class Game {
         return this.getLastRound();
     }
 
+    public Boolean hasWinner() {
+        List<PlayerState> test = this.getLastRound().getLastTurn().getPlayersStates().stream().filter(playerState -> playerState.getHealth() > 0)
+                .collect(Collectors.toList());
+        return test.size() > 1 ? false : true;
+    }
+
 }

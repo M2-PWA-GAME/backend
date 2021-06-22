@@ -98,8 +98,13 @@ public class GameService {
         return game;
     }
 
-    public Action executeAction(User user, ActionDTO action, String gameId) {
+    public Game playTurn(User user, ActionDTO action, String gameId) throws Exception {
         Game game = gameRepository.findGameById(gameId);
+        if (game.getStatus() == GameStatus.FINISHED) {
+            throw new CustomException("The game is FINISHED", HttpStatus.UNAUTHORIZED);
+
+        }
+
         if (!this.isPlayerInGame(game, user)) {
             throw new CustomException("You are not in this game", HttpStatus.UNAUTHORIZED);
         }
@@ -119,10 +124,33 @@ public class GameService {
             throw new CustomException("Something weird happened", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+        if (game.getLastRound().getState() == RoundState.FINISH) {
+            game.addRound();
+        }
 
-        this.executeAction(action, currentPlayerState, game.getMap(), game);
+        if (!game.getLastRound().getLastTurn().getPlayerId().toString().equals(user.getId().toString())) {
+            Turn newTurn = new Turn();
+            newTurn.setPlayerId(user.getId());
+            game.getLastRound().addTurn(newTurn);
+        }
 
-        return null;
+        List<PlayerState> newStates = this.executeAction(action, currentPlayerState, game.getMap(), game);
+
+        game.getLastRound().getLastTurn().setPlayersStates(newStates);
+
+        if (this.getPlayerOrder(game, user.getId().toString()) == game.getUsers().size() - 1 &&
+                game.getLastRound().getLastTurn().getActions().size() == 2) {
+            game.getLastRound().setState(RoundState.FINISH);
+        }
+
+        if (game.hasWinner()) {
+            game.getLastRound().setState(RoundState.FINISH);
+            game.setStatus(GameStatus.FINISHED);
+        } else if (game.getLastRound().getLastTurn().getActions().size() == 2) {
+            //TODO notify next player to play
+        }
+        gameRepository.update(game);
+        return game;
     }
 
 
@@ -134,7 +162,9 @@ public class GameService {
         String userId = user.getId().toString();
         Round lastRound = game.getLastRound();
 
-        if (lastRound.getState() == RoundState.FINISH) {
+        if (isPlayerDead(game, userId)) {
+            return false;
+        } else if (lastRound.getState() == RoundState.FINISH) {
             String firstUser = game.getTurnOrder().get("0");
             return firstUser != userId ? false : true;
         } else {
@@ -146,47 +176,57 @@ public class GameService {
         }
     }
 
+    private Boolean isPlayerDead(Game game, String userId) {
+        PlayerState state = game.getLastRound().getLastTurn().getPlayersStates()
+                .stream()
+                .filter(playerState -> playerState.getId().toString().equals(userId))
+                .findFirst()
+                .orElse(null);
+        if (state == null) throw new CustomException("Something weird happened", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return state.getHealth() <= 0;
+    }
+
     private String getLastPlayerWhoPlayed(Turn lastTurn) {
         return lastTurn.getPlayerId().toString();
     }
 
     private Integer getPlayerOrder(Game game, String userID) {
-        Entry<String, String> test = game.getTurnOrder().entrySet().stream().filter((key) -> userID.equals(key.getValue())).findFirst().orElse(null);
+        Entry<String, String> test = game.getTurnOrder()
+                .entrySet()
+                .stream()
+                .filter((key) -> userID.equals(key.getValue()))
+                .findFirst()
+                .orElse(null);
         if (test != null) {
             return Integer.getInteger(test.getKey());
         }
         return null;
     }
 
-    private void executeAction(ActionDTO action, PlayerState lastState, Map map, Game game) {
-
-        if (game.getLastRound().getState() == RoundState.FINISH) {
-            game.addRound();
-        }
+    private List<PlayerState> executeAction(ActionDTO action, PlayerState lastState, Map map, Game game) {
 
         switch (action.getActionType()) {
             case MOVE:
-                makeMove(action, lastState, map, game);
-                break;
+                return makeMove(action, lastState, map, game);
             case HIT:
-                makeAttack(action, lastState, game);
-                break;
+                return makeAttack(action, lastState, game);
             case PASS:
                 //TODO
-                break;
             default:
-                break;
+                return null;
+
         }
     }
 
-    private void makeAttack(ActionDTO action, PlayerState lastState, Game game) {
+    private List<PlayerState> makeAttack(ActionDTO action, PlayerState lastState, Game game) {
         this.checkLastPosition(lastState, action.getFrom());
         this.addActionToTurn(game, action);
         List<PlayerState> lastStates = game.getLastRound().getLastTurn().getPlayersStates();
 
         List<PlayerState> nextStates = lastStates;
         lastStates.forEach((playerState) -> {
-            if (playerState.getPosition().getX() == action.getTo().getX() && playerState.getPosition().getY() == action.getTo().getY()) {
+            if (playerState.getPosition().equals(action.getTo())) {
                 PlayerState state = nextStates.get(nextStates.indexOf(playerState));
                 Integer damages = lastState.getWeapon().getDamages();
                 if (state.getArmor() <= damages) {
@@ -198,14 +238,14 @@ public class GameService {
 
             }
         });
-
+        return nextStates;
     }
 
     private void addActionToTurn(Game game, ActionDTO action) {
         game.getLastRound().getLastTurn().addAction(mapper.map(action, Action.class));
     }
 
-    private void makeMove(ActionDTO action, PlayerState lastState, Map map, Game game) {
+    private List<PlayerState> makeMove(ActionDTO action, PlayerState lastState, Map map, Game game) {
 
         this.checkLastPosition(lastState, action.getFrom());
 
@@ -216,7 +256,16 @@ public class GameService {
         }
         this.addActionToTurn(game, action);
 
+        List<PlayerState> lastStates = game.getLastRound().getLastTurn().getPlayersStates();
+        List<PlayerState> nextStates = lastStates;
+        PlayerState changeState = nextStates.stream()
+                .filter(playerState -> playerState.getId().toString().equals(lastState.getId().toString()))
+                .findFirst()
+                .orElse(null);
 
+        if (changeState != null) changeState.setPosition(action.getTo());
+
+        return nextStates;
     }
 
     private void checkLastPosition(PlayerState lastState, Position from) {
