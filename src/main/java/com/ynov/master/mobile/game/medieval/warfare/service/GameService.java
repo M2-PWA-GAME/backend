@@ -142,7 +142,7 @@ public class GameService {
         this.addActionToTurn(game, action);
         game.lastRound().lastTurn().setPlayersStates(newStates);
 
-        if (game.lastRound().lastTurn().getActions().size() == 0 && action.getActionType() == ActionType.PASS) {
+        if (game.lastRound().lastTurn().getActions().size() == 1 && action.getActionType() == ActionType.PASS) {
             this.addActionToTurn(game, action);
             game.lastRound().lastTurn().setPlayersStates(newStates);
         }
