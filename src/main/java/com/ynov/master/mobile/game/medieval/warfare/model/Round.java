@@ -2,6 +2,7 @@ package com.ynov.master.mobile.game.medieval.warfare.model;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -9,7 +10,7 @@ public class Round {
 
     Integer index;
 
-    List<Turn> turns;
+    List<Turn> turns = new ArrayList();
 
     RoundState state = RoundState.NEW;
 
@@ -26,6 +27,9 @@ public class Round {
 
 
     public Turn lastTurn() {
+        if(turns.size() == 0) {
+            turns.add(new Turn());
+        }
         return turns.get(turns.size() - 1);
     }
 

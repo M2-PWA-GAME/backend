@@ -112,12 +112,12 @@ public class GameService {
         if (!this.isPlayerTurn(game, user)) {
             throw new CustomException("This is not your turn", HttpStatus.LOCKED);
         }
-        
+
 
         List<PlayerState> lastPlayerStates = game.lastRound().lastTurn().getPlayersStates();
         PlayerState currentPlayerState = lastPlayerStates
                 .stream()
-                .filter(state -> state.getId().toString() == user.getId().toString())
+                .filter(state -> state.getId().toString().equals(user.getId().toString()))
                 .findFirst()
                 .orElse(null);
 
@@ -125,8 +125,12 @@ public class GameService {
             throw new CustomException("Something weird happened", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+        List<PlayerState> newStates = this.executeAction(action, currentPlayerState, game.getMap(), game);
+
         if (game.lastRound().getState() == RoundState.FINISH) {
-            game.addRound();
+            Turn newTurn = new Turn();
+            newTurn.setPlayerId(user.getId());
+            game.addRound().addTurn(newTurn);
         }
 
         if (!game.lastRound().lastTurn().getPlayerId().toString().equals(user.getId().toString())) {
@@ -134,8 +138,7 @@ public class GameService {
             newTurn.setPlayerId(user.getId());
             game.lastRound().addTurn(newTurn);
         }
-
-        List<PlayerState> newStates = this.executeAction(action, currentPlayerState, game.getMap(), game);
+        this.addActionToTurn(game, action);
 
         game.lastRound().lastTurn().setPlayersStates(newStates);
 
@@ -169,7 +172,13 @@ public class GameService {
             String firstUser = game.getTurnOrder().get("0");
             return firstUser.equals(userId);
         } else {
+
             Turn lastTurn = lastRound.lastTurn();
+            System.out.println(lastRound);
+            System.out.println(lastTurn);
+            if(lastTurn.getPlayerId().toString().equals(userId) && lastTurn.getActions().size() < 2) {
+                return true;
+            }
             String lastPlayer = this.getLastPlayerWhoPlayed(lastTurn);
             Integer lastPlayerOrder = this.getPlayerOrder(game, lastPlayer);
             Integer currentPlayerOrder = this.getPlayerOrder(game, userId);
@@ -193,15 +202,18 @@ public class GameService {
     }
 
     private Integer getPlayerOrder(Game game, String userID) {
-        Entry<String, String> test = game.getTurnOrder()
+        Entry<String, String> order = game.getTurnOrder()
                 .entrySet()
                 .stream()
                 .filter((key) -> userID.equals(key.getValue()))
                 .findFirst()
                 .orElse(null);
-        if (test != null) {
-            return Integer.getInteger(test.getKey());
+
+        System.out.println("ORDER, " + userID + " : " + Integer.parseInt(order.getKey()));
+        if (order != null) {
+            return Integer.parseInt(order.getKey());
         }
+        System.out.println("NPE A ->>>>>>");
         return null;
     }
 
@@ -223,13 +235,11 @@ public class GameService {
 
     private List<PlayerState> makePass(ActionDTO action, Game game) {
         List<PlayerState> lastStates = game.lastRound().lastTurn().getPlayersStates();
-        this.addActionToTurn(game, action);
         return lastStates;
     }
 
     private List<PlayerState> makeAttack(ActionDTO action, PlayerState lastState, Game game) {
         this.checkLastPosition(lastState, action.getFrom());
-        this.addActionToTurn(game, action);
         List<PlayerState> lastStates = game.lastRound().lastTurn().getPlayersStates();
 
         lastStates.forEach((playerState) -> {
@@ -265,7 +275,6 @@ public class GameService {
         if (!landingTile.getIsNavigable()) {
             throw new CustomException("You cant walk there", HttpStatus.BAD_REQUEST);
         }
-        this.addActionToTurn(game, action);
 
         List<PlayerState> nextStates = game.lastRound().lastTurn().getPlayersStates();
         nextStates.stream()
@@ -279,7 +288,7 @@ public class GameService {
 
     private void checkLastPosition(PlayerState lastState, Position from) {
         Position lastPosition = lastState.getPosition();
-        if (lastPosition.equals(from)) {
+        if (!lastPosition.equals(from)) {
             throw new CustomException("Try not to cheat please", HttpStatus.BAD_REQUEST);
         }
     }

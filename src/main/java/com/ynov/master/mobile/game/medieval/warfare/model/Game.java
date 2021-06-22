@@ -100,7 +100,9 @@ public class Game {
 
 
     public Round addRound() {
-        this.rounds.add(new Round());
+        Round newRound = new Round();
+        newRound.setIndex(this.rounds.size());
+        this.rounds.add(newRound);
         return this.lastRound();
     }
 

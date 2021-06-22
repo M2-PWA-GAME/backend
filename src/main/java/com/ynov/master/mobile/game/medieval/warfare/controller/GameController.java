@@ -2,7 +2,6 @@ package com.ynov.master.mobile.game.medieval.warfare.controller;
 
 import com.ynov.master.mobile.game.medieval.warfare.dto.*;
 import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
-import com.ynov.master.mobile.game.medieval.warfare.model.Action;
 import com.ynov.master.mobile.game.medieval.warfare.model.Game;
 import com.ynov.master.mobile.game.medieval.warfare.model.Map;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
@@ -115,10 +114,10 @@ public class GameController {
     @ApiResponses(
             value = {@ApiResponse(code = 400, message = "Something went wrong")}
     )
-    public Game playTurn(HttpServletRequest req, @ApiParam("new player action datas") @RequestBody ActionDTO action,
-                           @ApiParam("Game code") @PathVariable("code") String code) throws Exception {
+    public GameResponseDTO playTurn(HttpServletRequest req, @ApiParam("new player action datas") @RequestBody ActionDTO action,
+                                    @ApiParam("Game code") @PathVariable("code") String code) throws Exception {
         User currentUser = userService.whoami(req);
-        return gameService.playTurn(currentUser, action, code);
+        return mapper.map(gameService.playTurn(currentUser, action, code), GameResponseDTO.class);
     }
 
 }
