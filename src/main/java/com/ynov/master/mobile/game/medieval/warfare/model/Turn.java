@@ -6,7 +6,6 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -23,9 +22,9 @@ public class Turn {
 
 
 
-    public void addAction(Action action) {
+    public void addAction(Action action) throws Exception {
         if(getActions().size() == 2) {
-            throw  new CustomException("You cannot play more than twice", HttpStatus.BAD_REQUEST);
+            throw new Exception("You cannot play more than twice");
         }
         this.actions.add(action);
     }

@@ -100,17 +100,16 @@ public class GameService {
 
     public Game playTurn(User user, ActionDTO action, String gameId) throws Exception {
         Game game = gameRepository.findGameById(gameId);
-        if (game.getStatus() == GameStatus.FINISHED) {
-            throw new CustomException("The game is FINISHED", HttpStatus.UNAUTHORIZED);
-
+        if (!this.isPlayerInGame(game, user)) {
+            throw new CustomException("You are not in this game", HttpStatus.FORBIDDEN);
         }
 
-        if (!this.isPlayerInGame(game, user)) {
-            throw new CustomException("You are not in this game", HttpStatus.UNAUTHORIZED);
+        if (game.getStatus() == GameStatus.FINISHED) {
+            throw new CustomException("The game is FINISHED", HttpStatus.LOCKED);
         }
 
         if (!this.isPlayerTurn(game, user)) {
-            throw new CustomException("This is not your turn", HttpStatus.UNAUTHORIZED);
+            throw new CustomException("This is not your turn", HttpStatus.LOCKED);
         }
 
         List<PlayerState> lastPlayerStates = game.getLastRound().getLastTurn().getPlayersStates();
@@ -249,7 +248,11 @@ public class GameService {
     }
 
     private void addActionToTurn(Game game, ActionDTO action) {
-        game.getLastRound().getLastTurn().addAction(mapper.map(action, Action.class));
+        try {
+            game.getLastRound().getLastTurn().addAction(mapper.map(action, Action.class));
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     private List<PlayerState> makeMove(ActionDTO action, PlayerState lastState, Map map, Game game) {
