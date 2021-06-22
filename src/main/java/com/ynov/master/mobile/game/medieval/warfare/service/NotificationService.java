@@ -49,8 +49,7 @@ public class NotificationService {
 
         WebpushNotification notification = new WebpushNotification(
                 "Joue ton coup !",
-                "C'est ton tour " + usr.getUsername() + ", à toi de jouer dans la partie " + game.getName(),
-                "https://medieval-warfare-game.herokuapp.com/icon-512.png"
+                "C'est ton tour " + usr.getUsername() + ", à toi de jouer dans la partie " + game.getName()
         );
 
         HashMap<String, String> data = new HashMap<>();
@@ -75,7 +74,7 @@ public class NotificationService {
         usersId.forEach(id -> sendNotification(id, notification, data));
     }
 
-    public void susbcribe(String topic, String clientToken)
+    public void subscribe(String topic, String clientToken)
     {
         try {
             TopicManagementResponse response = messageHandler.subscribeToTopicAsync(Collections.singletonList(clientToken), topic).get();

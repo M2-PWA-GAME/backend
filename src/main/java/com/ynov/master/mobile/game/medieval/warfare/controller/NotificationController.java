@@ -30,7 +30,7 @@ public class NotificationController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> register(HttpServletRequest req, @RequestBody String token) {
         User usr = userService.whoami(req);
-        notificationHandler.susbcribe(usr.getId().toString(),token);
+        notificationHandler.subscribe(usr.getId().toString(),token);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
