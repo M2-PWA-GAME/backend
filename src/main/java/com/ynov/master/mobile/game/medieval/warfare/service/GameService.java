@@ -140,8 +140,12 @@ public class GameService {
             game.lastRound().addTurn(newTurn);
         }
         this.addActionToTurn(game, action);
-
         game.lastRound().lastTurn().setPlayersStates(newStates);
+
+        if (game.lastRound().lastTurn().getActions().size() == 0 && action.getActionType() == ActionType.PASS) {
+            this.addActionToTurn(game, action);
+            game.lastRound().lastTurn().setPlayersStates(newStates);
+        }
 
         if (this.getPlayerOrder(game, user.getId().toString()) == game.getUsers().size() - 1 &&
                 game.lastRound().lastTurn().getActions().size() == 2) {
@@ -175,8 +179,6 @@ public class GameService {
         } else {
 
             Turn lastTurn = lastRound.lastTurn();
-            System.out.println(lastRound);
-            System.out.println(lastTurn);
             if (lastTurn.getPlayerId().toString().equals(userId) && lastTurn.getActions().size() < 2) {
                 return true;
             }
@@ -210,11 +212,9 @@ public class GameService {
                 .findFirst()
                 .orElse(null);
 
-        System.out.println("ORDER, " + userID + " : " + Integer.parseInt(order.getKey()));
         if (order != null) {
             return Integer.parseInt(order.getKey());
         }
-        System.out.println("NPE A ->>>>>>");
         return null;
     }
 
@@ -226,6 +226,10 @@ public class GameService {
             case HIT:
                 return makeAttack(action, lastState, game);
             case PASS:
+
+                if (game.lastRound().lastTurn().getActions().size() == 0) {
+
+                }
                 return makePass(action, game);
             default:
                 return null;
