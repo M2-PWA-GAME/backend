@@ -60,8 +60,6 @@ public class GameService {
             game.initGame();
             game.setStatus(GameStatus.PLAYING);
 
-            notificationHandler.sendNotifications(game.getUsers(),"Player list completed ! Good luck every one.");
-            notificationHandler.sendNotification(game.getTurnOrder().get(0),"Your turn, start the game !");
         }
 
         try{
