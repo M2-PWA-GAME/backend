@@ -90,24 +90,24 @@ public class Game {
     }
 
 
-    public List<Round> getSortedRounds() {
+    public List<Round> sortedRounds() {
         return this.getRounds().stream().sorted(Comparator.comparingInt(Round::getIndex)).collect(Collectors.toList());
     }
 
-    public Round getLastRound() {
-        return this.getSortedRounds().get(this.getSortedRounds().size() - 1);
+    public Round lastRound() {
+        return this.sortedRounds().get(this.sortedRounds().size() - 1);
     }
 
 
     public Round addRound() {
         this.rounds.add(new Round());
-        return this.getLastRound();
+        return this.lastRound();
     }
 
     public Boolean hasWinner() {
-        List<PlayerState> test = this.getLastRound().getLastTurn().getPlayersStates().stream().filter(playerState -> playerState.getHealth() > 0)
+        List<PlayerState> test = this.lastRound().lastTurn().getPlayersStates().stream().filter(playerState -> playerState.getHealth() > 0)
                 .collect(Collectors.toList());
-        return test.size() > 1 ? false : true;
+        return test.size() <= 1;
     }
 
 }

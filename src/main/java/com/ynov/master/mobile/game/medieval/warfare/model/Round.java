@@ -25,7 +25,7 @@ public class Round {
     }
 
 
-    public Turn getLastTurn() {
+    public Turn lastTurn() {
         return turns.get(turns.size() - 1);
     }
 
