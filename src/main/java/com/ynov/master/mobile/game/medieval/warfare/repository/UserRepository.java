@@ -6,6 +6,7 @@ import com.mongodb.client.model.FindOneAndReplaceOptions;
 import com.mongodb.client.model.ReturnDocument;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +19,12 @@ public class UserRepository {
 
     public User findByUsername(String username) {
         log.debug("Looking for user: " + username);
-        User usr = collection.find(Filters.eq("username", username)).first();
-        if (usr != null) {
-            log.debug("Find user : " + usr.getId());
-        } else {
-            log.debug("No user found.");
-        }
-        return usr;
+        return collection.find(Filters.eq("username", username)).first();
+    }
+
+    public User findById(String id) {
+        log.debug("Looking for user by id : " + id);
+        return collection.find(Filters.eq("_id", new ObjectId(id))).first();
     }
 
     public boolean existsByUsername(String username) {

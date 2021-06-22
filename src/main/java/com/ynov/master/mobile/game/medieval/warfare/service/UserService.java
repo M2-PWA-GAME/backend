@@ -72,7 +72,7 @@ public class UserService {
     }
 
     public User search(String username) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findById(username);
         if (user == null) {
             log.error("The user doesn't exist");
             throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);
