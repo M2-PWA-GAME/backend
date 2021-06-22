@@ -226,10 +226,6 @@ public class GameService {
             case HIT:
                 return makeAttack(action, lastState, game);
             case PASS:
-
-                if (game.lastRound().lastTurn().getActions().size() == 0) {
-
-                }
                 return makePass(action, game);
             default:
                 return null;
