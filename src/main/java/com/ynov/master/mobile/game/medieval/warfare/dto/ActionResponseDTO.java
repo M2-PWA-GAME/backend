@@ -8,7 +8,6 @@ import org.bson.types.ObjectId;
 
 @Data
 public class ActionResponseDTO {
-    private String id;
 
     ActionType actionType;
 

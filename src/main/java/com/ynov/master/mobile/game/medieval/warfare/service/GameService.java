@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -176,7 +177,7 @@ public class GameService {
             Turn lastTurn = lastRound.lastTurn();
             System.out.println(lastRound);
             System.out.println(lastTurn);
-            if(lastTurn.getPlayerId().toString().equals(userId) && lastTurn.getActions().size() < 2) {
+            if (lastTurn.getPlayerId().toString().equals(userId) && lastTurn.getActions().size() < 2) {
                 return true;
             }
             String lastPlayer = this.getLastPlayerWhoPlayed(lastTurn);
@@ -276,7 +277,9 @@ public class GameService {
             throw new CustomException("You cant walk there", HttpStatus.BAD_REQUEST);
         }
 
-        List<PlayerState> nextStates = game.lastRound().lastTurn().getPlayersStates();
+        List<PlayerState> nextStates = game.lastRound().lastTurn().getPlayersStates().stream().map(PlayerState::clone).collect(Collectors.toList());
+
+
         nextStates.stream()
                 .filter(playerState -> playerState.getId().toString().equals(lastState.getId().toString()))
                 .findFirst().ifPresent(changeState -> changeState.setPosition(action.getTo()));
