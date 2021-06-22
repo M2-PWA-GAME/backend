@@ -100,6 +100,7 @@ public class GameService {
 
     public Game playTurn(User user, ActionDTO action, String gameId) throws Exception {
         Game game = gameRepository.findGameById(gameId);
+
         if (!this.isPlayerInGame(game, user)) {
             throw new CustomException("You are not in this game", HttpStatus.FORBIDDEN);
         }
@@ -165,7 +166,7 @@ public class GameService {
             return false;
         } else if (lastRound.getState() == RoundState.FINISH) {
             String firstUser = game.getTurnOrder().get("0");
-            return firstUser != userId ? false : true;
+            return firstUser.equals(userId);
         } else {
             Turn lastTurn = lastRound.getLastTurn();
             String lastPlayer = this.getLastPlayerWhoPlayed(lastTurn);
@@ -230,10 +231,9 @@ public class GameService {
         this.addActionToTurn(game, action);
         List<PlayerState> lastStates = game.getLastRound().getLastTurn().getPlayersStates();
 
-        List<PlayerState> nextStates = lastStates;
         lastStates.forEach((playerState) -> {
             if (playerState.getPosition().equals(action.getTo())) {
-                PlayerState state = nextStates.get(nextStates.indexOf(playerState));
+                PlayerState state = lastStates.get(lastStates.indexOf(playerState));
                 Integer damages = lastState.getWeapon().getDamages();
                 if (state.getArmor() <= damages) {
                     state.setHealth(state.getHealth() - (damages - state.getArmor()));
@@ -244,7 +244,7 @@ public class GameService {
 
             }
         });
-        return nextStates;
+        return lastStates;
     }
 
     private void addActionToTurn(Game game, ActionDTO action) {
@@ -266,14 +266,10 @@ public class GameService {
         }
         this.addActionToTurn(game, action);
 
-        List<PlayerState> lastStates = game.getLastRound().getLastTurn().getPlayersStates();
-        List<PlayerState> nextStates = lastStates;
-        PlayerState changeState = nextStates.stream()
+        List<PlayerState> nextStates = game.getLastRound().getLastTurn().getPlayersStates();
+        nextStates.stream()
                 .filter(playerState -> playerState.getId().toString().equals(lastState.getId().toString()))
-                .findFirst()
-                .orElse(null);
-
-        if (changeState != null) changeState.setPosition(action.getTo());
+                .findFirst().ifPresent(changeState -> changeState.setPosition(action.getTo()));
 
         //TODO Changer arme si marche sur une case avec
 
@@ -282,7 +278,7 @@ public class GameService {
 
     private void checkLastPosition(PlayerState lastState, Position from) {
         Position lastPosition = lastState.getPosition();
-        if (lastPosition.getX() != from.getX() || from.getY() != lastPosition.getY()) {
+        if (lastPosition.equals(from)) {
             throw new CustomException("Try not to cheat please", HttpStatus.BAD_REQUEST);
         }
     }
