@@ -148,7 +148,7 @@ public class GameService {
             game.lastRound().lastTurn().setPlayersStates(newStates);
         }
 
-        if (this.getPlayerOrder(game, user.getId().toString()) == game.getUsers().size() - 1 &&
+        if (this.getPlayerOrder(game, user.getId().toString()) == game.getTurnOrder().size() - 1 &&
                 game.lastRound().lastTurn().getActions().size() == 2) {
             game.lastRound().setState(RoundState.FINISH);
         }
@@ -265,6 +265,11 @@ public class GameService {
                 } else {
                     state.setArmor(state.getArmor() - damages);
                 }
+
+                if(state.getHealth() <= 0) {
+                    game.removeUserFromOrder(state.getId().toString());
+                }
+
 
             }
         });

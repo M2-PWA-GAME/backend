@@ -4,11 +4,8 @@ import lombok.Data;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.Comparator;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -110,6 +107,19 @@ public class Game {
         List<PlayerState> test = this.lastRound().lastTurn().getPlayersStates().stream().filter(playerState -> playerState.getHealth() > 0)
                 .collect(Collectors.toList());
         return test.size() <= 1;
+    }
+
+    public void removeUserFromOrder(String userId) {
+        HashMap<String, String> newOrder = new HashMap<>();
+
+        AtomicReference<Integer> index = new AtomicReference<>(0);
+        this.turnOrder.forEach((key, value) -> {
+            if (!value.equals(userId)) {
+                newOrder.put(String.valueOf(index), value);
+                index.getAndSet(index.get() + 1);
+            }
+        });
+        this.turnOrder = newOrder;
     }
 
 }
