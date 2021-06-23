@@ -74,6 +74,19 @@ public class NotificationService {
         usersId.forEach(id -> sendNotification(id, notification, data));
     }
 
+    public void pingAll(List<String> usersId) {
+        WebpushNotification notification = new WebpushNotification(
+                "Test notification",
+                "Ping"
+        );
+
+        HashMap<String, String> data = new HashMap<>();
+        data.put("type",NotificationType.PING.toString());
+
+        usersId.forEach(id -> sendNotification(id, notification, data));
+    }
+
+
     public void subscribe(String topic, String clientToken)
     {
         try {

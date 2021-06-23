@@ -6,7 +6,6 @@ import com.ynov.master.mobile.game.medieval.warfare.model.User;
 import com.ynov.master.mobile.game.medieval.warfare.repository.UserRepository;
 import com.ynov.master.mobile.game.medieval.warfare.security.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -101,6 +100,6 @@ public class UserService {
                 .stream()
                 .map(user -> user.getId().toString())
                 .collect(Collectors.toList());
-        notificationHandler.sendNotifications(allUsers, message);
+        notificationHandler.pingAll(allUsers);
     }
 }
