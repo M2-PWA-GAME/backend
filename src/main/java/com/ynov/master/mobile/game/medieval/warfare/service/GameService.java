@@ -157,12 +157,19 @@ public class GameService {
             game.lastRound().setState(RoundState.FINISH);
             game.setStatus(GameStatus.FINISHED);
         } else if (game.lastRound().lastTurn().getActions().size() == 2) {
-            //TODO notify next player to play
+            int curentUserIdx = game.getTurnOrder()
+                    .entrySet()
+                    .stream()
+                    .filter(e -> e.getValue().equals(user.getId().toString()))
+                    .findFirst()
+                    .map(o -> Integer.valueOf(o.getKey())).get();
+
+            int nextUserIdx = curentUserIdx != game.getTurnOrder().size() ? 0 : curentUserIdx + 1;
+            notificationHandler.yourTurnNotification(game.getTurnOrder().get(Integer.toString(nextUserIdx)),gameId);
         }
         gameRepository.update(game);
         return game;
     }
-
 
     private Boolean isPlayerInGame(Game game, User user) {
         return game.getUsers().contains(user.getId().toString());
