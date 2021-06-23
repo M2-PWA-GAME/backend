@@ -117,12 +117,4 @@ public class UserController {
         return responseDTO;
     }
 
-
-    @PostMapping("/notifyAll")
-    @ApiOperation(value = "Notify all users")
-    @ApiResponses(value = {@ApiResponse(code = 400, message = "Something went wrong")})
-    public ResponseEntity<Void> notifyAllUsers() {
-        userService.notifyAllUsers("Test de notification");
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-    }
 }

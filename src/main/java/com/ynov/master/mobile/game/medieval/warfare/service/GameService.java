@@ -5,6 +5,7 @@ import com.ynov.master.mobile.game.medieval.warfare.exception.CustomException;
 import com.ynov.master.mobile.game.medieval.warfare.model.*;
 import com.ynov.master.mobile.game.medieval.warfare.repository.GameRepository;
 import com.ynov.master.mobile.game.medieval.warfare.repository.UserRepository;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.modelmapper.ModelMapper;
@@ -157,14 +158,9 @@ public class GameService {
             game.lastRound().setState(RoundState.FINISH);
             game.setStatus(GameStatus.FINISHED);
         } else if (game.lastRound().lastTurn().getActions().size() == 2) {
-            int curentUserIdx = game.getTurnOrder()
-                    .entrySet()
-                    .stream()
-                    .filter(e -> e.getValue().equals(user.getId().toString()))
-                    .findFirst()
-                    .map(o -> Integer.valueOf(o.getKey())).get();
+            int currentUserIdx = this.getPlayerOrder(game,user.getId().toString());
 
-            int nextUserIdx = curentUserIdx != game.getTurnOrder().size() ? 0 : curentUserIdx + 1;
+            int nextUserIdx = currentUserIdx == game.getTurnOrder().size() - 1  ? 0 : currentUserIdx + 1;
             notificationHandler.yourTurnNotification(game.getTurnOrder().get(Integer.toString(nextUserIdx)),gameId);
         }
         gameRepository.update(game);
@@ -222,12 +218,9 @@ public class GameService {
                 .stream()
                 .filter((key) -> userID.equals(key.getValue()))
                 .findFirst()
-                .orElse(null);
+                .get();
 
-        if (order != null) {
-            return Integer.parseInt(order.getKey());
-        }
-        return null;
+        return Integer.parseInt(order.getKey());
     }
 
     private List<PlayerState> executeAction(ActionDTO action, PlayerState lastState, Map map, Game game) {

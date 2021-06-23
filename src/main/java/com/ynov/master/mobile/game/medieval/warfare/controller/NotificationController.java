@@ -5,6 +5,9 @@ import com.ynov.master.mobile.game.medieval.warfare.model.User;
 import com.ynov.master.mobile.game.medieval.warfare.service.NotificationService;
 import com.ynov.master.mobile.game.medieval.warfare.service.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,4 +37,5 @@ public class NotificationController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
 }

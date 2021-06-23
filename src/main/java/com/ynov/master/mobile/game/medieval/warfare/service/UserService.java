@@ -94,12 +94,4 @@ public class UserService {
         return jwtTokenProvider.createToken(user);
     }
 
-
-    public void notifyAllUsers(String message) {
-        List<String> allUsers = userRepository.findAll()
-                .stream()
-                .map(user -> user.getId().toString())
-                .collect(Collectors.toList());
-        notificationHandler.pingAll(allUsers);
-    }
 }

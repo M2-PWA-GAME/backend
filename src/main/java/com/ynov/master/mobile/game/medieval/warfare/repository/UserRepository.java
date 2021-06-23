@@ -1,6 +1,8 @@
 package com.ynov.master.mobile.game.medieval.warfare.repository;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import com.ynov.master.mobile.game.medieval.warfare.model.User;
 import lombok.extern.slf4j.Slf4j;
@@ -30,10 +32,6 @@ public class UserRepository {
 
     public boolean existsByUsername(String username) {
         return collection.find(Filters.eq("username", username)).first() != null;
-    }
-
-    public List<User> findAll() {
-        return collection.find().into(new ArrayList<>());
     }
 
     public void save(User user) {
