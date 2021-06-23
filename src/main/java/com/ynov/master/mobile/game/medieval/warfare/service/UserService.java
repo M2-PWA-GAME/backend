@@ -37,7 +37,7 @@ public class UserService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    NotifificationService notificationHandler;
+    NotificationService notificationHandler;
 
     public String signin(String username, String password) {
         try {
