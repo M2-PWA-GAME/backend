@@ -9,6 +9,8 @@ import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -113,5 +115,14 @@ public class UserController {
         responseDTO.setGames(previewGames);
 
         return responseDTO;
+    }
+
+
+    @PostMapping("/notifyAll")
+    @ApiOperation(value = "Notify all users")
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Something went wrong")})
+    public ResponseEntity<Void> notifyAllUsers() {
+        userService.notifyAllUsers("Test de notification");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 }

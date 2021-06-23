@@ -15,9 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,6 +34,9 @@ public class UserService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    NotifificationService notificationHandler;
 
     public String signin(String username, String password) {
         try {
@@ -89,5 +92,14 @@ public class UserService {
     public String refresh(String username) {
         User user = userRepository.findByUsername(username);
         return jwtTokenProvider.createToken(user);
+    }
+
+
+    public void notifyAllUsers(String message) {
+        List<String> allUsers = userRepository.findAll()
+                .stream()
+                .map(user -> user.getId().toString())
+                .collect(Collectors.toList());
+        notificationHandler.sendNotifications(allUsers, message);
     }
 }
